@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scheduleMe</title>
+        
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-firestore.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        
+        <link rel="stylesheet" type="text/css" href="./style.css"/>
+    </head>
+    
+    <body onload="initialize()">
+        <!-- Your Code Starts Here -->
+        <h1 class="title">scheduleMe!</h1>
+        
+        <b>Filter:</b>
+        <select id="filter" onchange="listDonors()">
+            <option value="any" selected="selected">Any</option>
+            <option value="lowcost">Low Cost</option>
+            <option value="localevents">Local Events</option>
+            <option value="restaurants">Restaurants</option>
+        </select>
+        <hr><hr>
+
+        <button type="button" onclick="login()">Google Sign In</button>
+
+        <!-- Your Code Stops Here -->
+        <script src="./config.js"></script>
+        <script src="./scripts.js"></script>
+        
+    </body>
+</html>
+
