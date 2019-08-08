@@ -1,5 +1,4 @@
-function initialize()
-{
+function initialize() {
     firebase.initializeApp(firebaseConfig);
 }
 
@@ -11,14 +10,12 @@ function login() {
         // The signed-in user info.
         var user = result.user;
         // ...
-        //TESTING
-        // var user = firebase.auth().currentUser;
-
-        // user.sendEmailVerification().then(function() {
-        //   // Email sent.
-        // }).catch(function(error) {
-        //   // An error happened.
-        // });
+        //WE WANT THE USER TO CREATE AN ACCOUNT/GIVE US INFORMATION
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              window.location.replace('home.html');
+            }
+        });
         console.log('function called');
     }).catch(function(error) {
         // Handle Errors here.
