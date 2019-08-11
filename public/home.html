@@ -6,17 +6,24 @@
             <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="./home_style.css"/>
     </head>
-    <body>
+    <body></body> <!--onload="getUserData()" TRYING TO GET THE USER'S DATA FROM GOOGLE AUTHENTICATION-->
         
         <div class="header">
-            <h1>User's Name</h1>
+            <h1>
+                <!--
+                    <p id="username">
+                    ATTEMPTING TO DISPLAY THE USER'S NAME ON HEADER OF WEBSITE
+                    </p>
+                -->
+                User's Name
+            </h1>
         </div>
         
         <div class="navbar">
-            <a href="#">About</a>
-            <a href="#">My Schedule</a>
-            <a href="#">Friends</a>
-            <a href="#" class="right">Settings</a>
+            <a href="#" onclick="aboutRedirect()">About</a>
+            <a href="#" onclick="my_scheduleRedirect()">My Schedule</a>
+            <a href="#" onclick="friendsRedirect()">Friends</a>
+            <a href="#" class="right" onclick="settingsRedirect()">Settings</a>
         </div>
         
         <div class="row">
@@ -50,5 +57,7 @@
             <h2>Copyright</h2>
         </div>
         
+        <script src="./scripts_home.js"></script>
+
     </body>
 </html>

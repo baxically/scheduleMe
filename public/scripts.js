@@ -11,6 +11,8 @@ function login() {
         var user = result.user;
         // ...
         //WE WANT THE USER TO CREATE AN ACCOUNT/GIVE US INFORMATION
+        var name = user.name;
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               window.location.replace('home.html');
