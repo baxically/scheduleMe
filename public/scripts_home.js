@@ -39,4 +39,5 @@ function getUserData() {
     //     // append our new text node to the element in question
     //     pArray[0].appendChild(bar1TextNode);
     // };
+
 } //ATTEMPTING TO DISPLAY THE USER'S NAME ON HEADER OF WEBSITE
