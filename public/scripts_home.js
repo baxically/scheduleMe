@@ -15,7 +15,13 @@ function settingsRedirect() {
 }
 
 function getUserData() {
-    var name = user.name;
+    firebase.initializeApp(firebaseConfig);
+    var user = firebase.auth().currentUser;
+    var name = "User's Name";
+    if(user) {
+        console.log('user signed in');
+        name = user.displayName;
+    }
 
     document.getElementById("username").innerHTML = name;
 

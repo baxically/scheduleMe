@@ -11,14 +11,28 @@ function login() {
         var user = result.user;
         // ...
         //WE WANT THE USER TO CREATE AN ACCOUNT/GIVE US INFORMATION
-        var name = user.name;
+        //var db = firebase.firestore();
+        var name = user.displayName;
+        var email = user.email;
+        var avatarURL = user.photoURL;
+        var friendList = new Array();
+
+        var profile = {
+            profName: name,
+            profEmail: email,
+            profAvatar: avatarURL,
+            profFriends: friendList
+        };
+
+        addUser(profile);
+        //INSTEAD OF USING .ADD() WITH A RANDOMLY GENERATED ID, MAYBE USE .DOC().SET()
+        //SO THAT YOU CAN SEARCH FOR ID'S
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               window.location.replace('home.html');
             }
         });
-        console.log('function called');
     }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -32,6 +46,18 @@ function login() {
         console.log(email);
         console.log(credential);
         // ...
+    });
+}
+
+function addUser(profile) {
+    var db = firebase.firestore();
+
+    db.collection("users").doc(profile.profEmail).set({
+        //GToken: token,
+        avatar: profile.profAvatar,
+        displayName: profile.profName,
+        email: profile.profEmail,
+        friends: profile.profFriends
     });
 }
 
