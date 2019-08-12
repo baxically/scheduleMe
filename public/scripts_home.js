@@ -7,7 +7,11 @@ function friendsRedirect() {
 }
 
 function my_scheduleRedirect() {
-    window.location.replace('my_schedule.html');
+    //window.location.replace('my_schedule.html');
+    //
+	//testing popups and methods
+	var d = new Date();
+	alert(d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear() );
 }
 
 function settingsRedirect() {
