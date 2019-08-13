@@ -1,25 +1,27 @@
+var user = null; //FIXME
+
 function initialize() {
     firebase.initializeApp(firebaseConfig);
 }
 
 function aboutRedirect() {
-    window.location.replace('about.html');
+    location.href = 'about.html';
 }
 
 function friendsRedirect() {
-    window.location.replace('friends.html');
+    location.href = 'friends.html';
 }
 
 function my_scheduleRedirect() {
-    window.location.replace('my_schedule.html');
+    location.href = 'my_schedule.html';
 }
 
 function settingsRedirect() {
-    window.location.replace('settings.html');
+    location.href = 'settings.html';
 }
 
 function homeRedirect() {
-    window.location.replace('home.html');
+    location.href = 'home.html';
 }
 
 function login() {
@@ -45,14 +47,11 @@ function login() {
                 profAvatar: avatarURL,
                 profFriends: friendList
             };
-    
+            
             addUser(profile);
-    
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    homeRedirect();
-                }
-            });
+
+            setTimeout(function(){homeRedirect();}, 1000);
+            
         })
     }).catch(function(error) {
         // Handle Errors here.
@@ -72,14 +71,16 @@ function login() {
 
 function addUser(profile) {
     var db = firebase.firestore();
-
+    console.log('before db.set');
     db.collection("users").doc(profile.profEmail).set({
+    //db.collection("users").add({
         //GToken: token,
         avatar: profile.profAvatar,
         displayName: profile.profName,
         email: profile.profEmail,
         friends: profile.profFriends
     });
+    console.log('after db.set');
 }
 
 function logout() {
@@ -91,35 +92,19 @@ function logout() {
 }
 
 function getUserData() {
-    firebase.initializeApp(firebaseConfig);
-    var user = firebase.auth().currentUser;
-    var name = "User's Name";
-    if(user) {
-        console.log('user signed in');
-        name = user.displayName;
-    }
-
-    document.getElementById("username").innerHTML = name;
-
-    // window.onload = function(){
-    //     // you do not need to initialize like this, but I like to
-    //     var bar1 = new String('placeholder1');
-    //     var bar2 = new String('placeholder2');
-    //     var foo = new Array();
-
-    //     // populate the Array with our Strings 
-    //     foo.push(bar1);
-    //     foo.push(bar2);
-
-    //     // create an array containing all the p tags on the page 
-    //     // (which is this case is only one, would be better to assign an id)
-    //     pArray = document.getElementsByTagName('p');
-
-    //     // create a text node in the document, this is the proper DOM method
-    //     bar1TextNode = document.createTextNode(foo[0].toString());
-
-    //     // append our new text node to the element in question
-    //     pArray[0].appendChild(bar1TextNode);
-    // };
-
-} //ATTEMPTING TO DISPLAY THE USER'S NAME ON HEADER OF WEBSITE
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            user = firebase.auth().currentUser;
+            var name = "User's Name";
+            if(user) {
+                console.log('user signed in');
+                name = user.displayName;
+            }
+        
+            document.getElementById("username").innerHTML = name; //FIXME BACK TO 'name'
+            // User is signed in.
+        } else {
+            // No user is signed in.
+        }
+    });
+}
