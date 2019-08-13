@@ -10,10 +10,10 @@ body {
 
 /* Header/logo Title */
 .header {
-    padding: 80px;
+    padding: 40px;
     text-align: center;
     color: white;
-    background: mintcream;
+    background: black;
 }
 
 /* Increase the font size of the heading */

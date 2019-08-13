@@ -4,24 +4,21 @@ function initialize() {
     firebase.initializeApp(firebaseConfig);
 }
 
-function aboutRedirect() {
-    location.href = 'about.html';
+function homeRedirect() {
+    location.href = 'home.html';
 }
 
-function friendsRedirect() {
-    location.href = 'friends.html';
-}
 
-function my_scheduleRedirect() {
-    location.href = 'my_schedule.html';
+function create_eventsRedirect() {
+    location.href = 'create_events.html';
 }
 
 function settingsRedirect() {
     location.href = 'settings.html';
 }
 
-function homeRedirect() {
-    location.href = 'home.html';
+function profileRedirect() {
+    location.href = 'profile.html';
 }
 
 function login() {
@@ -50,7 +47,7 @@ function login() {
             
             addUser(profile);
 
-            setTimeout(function(){homeRedirect();}, 1000);
+            setTimeout(function(){profileRedirect();}, 1000);
             
         })
     }).catch(function(error) {
