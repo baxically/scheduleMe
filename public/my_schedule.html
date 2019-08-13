@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>My Schedule</title>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+                
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-firestore.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+                
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+                
+                <link rel="stylesheet" type="text/css" href="./profile_style.css"/>
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+                </head>
+    <body onload="initialize(); getUserData();"></body>
+    
+    <div class="header">
+        <h1>
+            <p id="username">
+            </p>
+        </h1>
+    </div>
+    
+    <div class="navbar">
+        <a href="home.html" onclick="aboutRedirect()">Home</a>
+        <a href="profile.html" onclick="profileRedirect()">Profile</a>
+        <a href="my_schedule.html" onclick="my_scheduleRedirect()">Create Events</a>
+        <a href="friends.html" onclick="friendsRedirect()">Friends</a>
+        <a href="settings.html" class="right" onclick="settingsRedirect()">Settings</a>
+    </div>
+    
+    <label>Calendar:</label>
+    <input type="text" name="dates" class="form-control pull-right" />
+    
+    <script src="./scripts.js"></script>
+    <script src="./config.js"></script>
+    
+    </body>
+</html>
+

@@ -108,3 +108,15 @@ function getUserData() {
         }
     });
 }
+
+function openPrompt() {
+    var event = prompt("Please enter the name of your event", "");
+    if (event != null) {
+        document.getElementById("demo").innerHTML =
+        "Who would you like to invite to '" + event + "'?";
+    }
+}
+
+$(function() {
+  $('input[name="dates"]').daterangepicker({ startDate: moment(), endDate: moment().add(2, 'day')});
+  })

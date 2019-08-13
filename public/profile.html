@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Profile</title>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="./profile_style.css"/>
+    </head>
+    <body onload="initialize(); getUserData();"></body>
+        
+        <div class="header">
+            <h1>
+                <p id="username">
+                </p>
+            </h1>
+        </div>
+        
+        <div class="navbar">
+            <a href="home.html" onclick="aboutRedirect()">Home</a>
+            <a href="profile.html" onclick="profileRedirect()">Profile</a>
+            <a href="my_schedule.html" onclick="my_scheduleRedirect()">Create Events</a>
+            <a href="friends.html" onclick="friendsRedirect()">Friends</a>
+            <a href="settings.html" class="right" onclick="settingsRedirect()">Settings</a>
+        </div>
+        
+        <div class="row">
+            <div class="side">
+                <!--<h2>About Me</h2>
+                 <h5>Photo of me:</h5>-->
+                <div class="fakeimg" style="height:200px;">Google profile picture</div>
+                
+                <!--<p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+                 <h3>More Text</h3>
+                 <p>Lorem ipsum dolor sit ame.</p>
+                 <div class="fakeimg" style="height:60px;">Image</div><br>
+                 <div class="fakeimg" style="height:60px;">Image</div><br>
+                 <div class="fakeimg" style="height:60px;">Image</div>-->
+            </div>
+            <div class="main">
+                <h2>MY HANGOUTS</h2>
+                <h5>Things I'm going to...</h5>
+                <div class="fakeimg" style="height:200px;">List of your events</div>
+                <!--<p>Some text..</p>
+                 <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>-->
+                <br>
+                
+                <div class="wrapper">
+                    <button type="button" id="eventButton" onclick="openPrompt()">Create event</button>
+                </div>
+                
+                <p id="demo"></p>
+                
+                <h2>MY FRIENDS</h2>
+                <h5>See what your friends are doing:</h5>
+                <div class="fakeimg" style="height:200px;">Friends are going to</div>
+                <!--<p>Some text..</p>
+                 <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>-->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h2></h2>
+        </div>
+        
+        <script src="./scripts.js"></script>
+        <script src="./config.js"></script>
+
+    </body>
+</html>
