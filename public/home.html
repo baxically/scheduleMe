@@ -4,18 +4,19 @@
         <title>Profile</title>
         <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+
         <link rel="stylesheet" type="text/css" href="./home_style.css"/>
     </head>
-    <body></body> <!--onload="getUserData()" TRYING TO GET THE USER'S DATA FROM GOOGLE AUTHENTICATION-->
+    <body onload="getUserData()"></body>
         
         <div class="header">
             <h1>
-                <!--
-                    <p id="username">
-                    ATTEMPTING TO DISPLAY THE USER'S NAME ON HEADER OF WEBSITE
-                    </p>
-                -->
-                User's Name
+                <p id="username">
+                </p>
             </h1>
         </div>
         
@@ -58,6 +59,7 @@
         </div>
         
         <script src="./scripts_home.js"></script>
+        <script src="./config.js"></script>
 
     </body>
 </html>
