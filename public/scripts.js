@@ -5,23 +5,23 @@ function initialize() {
 }
 
 function aboutRedirect() {
-    window.location.replace('about.html');
+    location.href = 'about.html';
 }
 
 function friendsRedirect() {
-    window.location.replace('friends.html');
+    location.href = 'friends.html';
 }
 
 function my_scheduleRedirect() {
-    window.location.replace('my_schedule.html');
+    location.href = 'my_schedule.html';
 }
 
 function settingsRedirect() {
-    window.location.replace('settings.html');
+    location.href = 'settings.html';
 }
 
 function homeRedirect() {
-    window.location.replace('home.html');
+    location.href = 'home.html';
 }
 
 function login() {
@@ -47,14 +47,11 @@ function login() {
                 profAvatar: avatarURL,
                 profFriends: friendList
             };
-    
+            
             addUser(profile);
-    
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    homeRedirect();
-                }
-            });
+
+            setTimeout(function(){homeRedirect();}, 1000);
+            
         })
     }).catch(function(error) {
         // Handle Errors here.
@@ -74,14 +71,16 @@ function login() {
 
 function addUser(profile) {
     var db = firebase.firestore();
-
+    console.log('before db.set');
     db.collection("users").doc(profile.profEmail).set({
+    //db.collection("users").add({
         //GToken: token,
         avatar: profile.profAvatar,
         displayName: profile.profName,
         email: profile.profEmail,
         friends: profile.profFriends
     });
+    console.log('after db.set');
 }
 
 function logout() {
