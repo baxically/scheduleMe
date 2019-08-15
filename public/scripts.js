@@ -110,7 +110,7 @@ function openPrompt() {
     var event = prompt("Please enter the name of your event", "");
     if (event != null) {
         document.getElementById("demo").innerHTML =
-        "Who would you like to invite to '" + event + "'?";
+        "When are you free to host '" + event + "'?";
     }
 }
 
