@@ -239,15 +239,41 @@ function openPrompt() {
 
 $(function() {
   $('input[name="dates"]').daterangepicker({
-                                           timePicker: true,
-                                           startDate: moment(),
-                                           endDate: moment().add(2, 'day'),
-                                           locale: {
-                                           format: 'M/DD hh:mm A'
-                                           }
-                                           },
-                                           function(start, end, label) {
-                                           console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-                                                       ' to ' + end.format('M/DD hh:mm A'));
-                                           });
-  });
+        timePicker: true,
+        startDate: moment(),
+        endDate: moment().add(2, 'day'),
+        locale: {
+            format: 'M/DD hh:mm A'
+            }
+        },
+        function(start, end, label) {
+        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+        ' to ' + end.format('M/DD hh:mm A'));
+    });
+});
+
+function listFriends() {
+    var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
+    
+    var person = "";
+    
+    for(var i = 0; i < staticFriends.length; i++)
+    {
+        person += "<li>" + staticFriends[i] + "</li> <br>";
+    }
+    
+    document.getElementById("fList").innerHTML = person;
+}
+
+function listEvents() {
+    var staticEvents = ["Lan @ Alex's", "Hot Pot @ Aaron's", "Kyle's Birthday Party"];
+    
+    var event = "";
+    
+    for(var i = 0; i < staticEvents.length; i++)
+    {
+        event += "<li>" + staticEvents[i] + "</li> <br>";
+    }
+    
+    document.getElementById("eList").innerHTML = event;
+}
