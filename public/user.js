@@ -1,27 +1,46 @@
-
 export default class User {
     constructor() {
-        this.db = firebase.firestore();
-        //this.userRef = db.collection("users");
+        this.user = null;
+        this.email = 'Email';
+        this.displayName = 'Display Name';
+        this.avatar = 'Avatar';
+        this.friends = new Array;
+        
+
     }
 
     //Getters
     get getUserEmail() {
+        return this.getEmail();
+    }
+
+    get getUserName() {
+        return this.getName();
+    }
+
+    getEmail() {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
+                console.log('user is signed in');
                 user = firebase.auth().currentUser;
-                return user.email;
+                //console.log(user.email);
+                var email = user.email;
+                console.log(email);
+                return email;
             } else {
                 // No user is signed in.
+                console.log('user is not signed in');
                 return 'Error Obtaining Email';
             }
         });
     }
 
-    get getUserName() {
-        var userRef = db.collection("users");
-        userRef.where("email", "==", getUserEmail()).get().then(function(querySnapshot) {
+    getName() {
+        //this.getEmail.bind(this)
+        var db = firebase.firestore();
+        var userRef = db.collection("users").doc(this.getEmail());
+        userRef.get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 return doc.data().displayName;
             })
@@ -31,8 +50,10 @@ export default class User {
     }
 
     get getUserAvatar() {
+        var db = firebase.firestore();
+
         var userRef = db.collection("users");
-        userRef.where("email", "==", getUserEmail()).get().then(function(querySnapshot) {
+        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 return doc.data().avatar;
             })
@@ -42,8 +63,10 @@ export default class User {
     }
 
     get getUserFriends() {
+        var db = firebase.firestore();
+
         var userRef = db.collection("users");
-        userRef.where("email", "==", getUserEmail()).get().then(function(querySnapshot) {
+        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 return doc.data().friends;
             })
@@ -59,6 +82,8 @@ export default class User {
     }
 
     set setUserName(userName) {
+        var db = firebase.firestore();
+
         db.collection("users").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 if(doc.data().email == this.getUserEmail) {
@@ -69,6 +94,8 @@ export default class User {
     }
     
     set setUserAvatar(userAvatar) {
+        var db = firebase.firestore();
+
         db.collection("users").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 if(doc.data().avatar == this.getUserAvatar){
@@ -79,6 +106,8 @@ export default class User {
     }
 
     set setUserFriends(userFriends) {
+        var db = firebase.firestore();
+
         db.collection("users").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 if(doc.data().friends == this.getUserFriends){

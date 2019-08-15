@@ -3,25 +3,34 @@
 
 class User {
     constructor() {
-        this.user;
-        this.displayName;
-        this.avatar;
-        this.friends;
-        this.email;
+        this.user = null;
+        this.email = 'Email';
+        this.displayName = 'Display Name';
+        this.avatar = 'Avatar';
+        this.friends = new Array;
+        
 
     }
 
     //Getters
     get getUserEmail() {
+        return this.getEmail();
+    }
+
+    get getUserName() {
+        return this.getName();
+    }
+
+    getEmail() {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
                 console.log('user is signed in');
                 user = firebase.auth().currentUser;
                 //console.log(user.email);
-                this.email = user.email;
-                console.log(this.email);
-                return this.email;
+                var email = user.email;
+                console.log(email);
+                return email;
             } else {
                 // No user is signed in.
                 console.log('user is not signed in');
@@ -30,11 +39,11 @@ class User {
         });
     }
 
-    get getUserName() {
+    getName() {
+        //this.getEmail.bind(this)
         var db = firebase.firestore();
-
-        var userRef = db.collection("users");
-        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
+        var userRef = db.collection("users").doc(this.getEmail());
+        userRef.get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 return doc.data().displayName;
             })
@@ -209,11 +218,13 @@ function getUserData() {
                 console.log('user signed in');
                 name = user.displayName;
             }
-        
+            //let user1 = new User();
+            //var name = user1.getUserName();
             document.getElementById("username").innerHTML = name; //FIXME BACK TO 'name'
             // User is signed in.
         } else {
             // No user is signed in.
+            console.log('user state is broken');
         }
     });
 }
