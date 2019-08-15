@@ -1,6 +1,117 @@
 //import User from './user.js';
 //ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
 
+class User {
+    constructor() {
+        this.user;
+        this.displayName;
+        this.avatar;
+        this.friends;
+        this.email;
+
+    }
+
+    //Getters
+    get getUserEmail() {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                console.log('user is signed in');
+                user = firebase.auth().currentUser;
+                //console.log(user.email);
+                this.email = user.email;
+                console.log(this.email);
+                return this.email;
+            } else {
+                // No user is signed in.
+                console.log('user is not signed in');
+                return 'Error Obtaining Email';
+            }
+        });
+    }
+
+    get getUserName() {
+        var db = firebase.firestore();
+
+        var userRef = db.collection("users");
+        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                return doc.data().displayName;
+            })
+        }).catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+    }
+
+    get getUserAvatar() {
+        var db = firebase.firestore();
+
+        var userRef = db.collection("users");
+        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                return doc.data().avatar;
+            })
+        }).catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+    }
+
+    get getUserFriends() {
+        var db = firebase.firestore();
+
+        var userRef = db.collection("users");
+        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                return doc.data().friends;
+            })
+        }).catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+    }
+
+    //Setters
+    set setUserEmail(userEmail) {
+            return null;
+            //NOT GIVING ACCESS FOR MVP
+    }
+
+    set setUserName(userName) {
+        var db = firebase.firestore();
+
+        db.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().email == this.getUserEmail) {
+                    //doc.set(displayName: userName);
+                }
+            });
+        });
+    }
+    
+    set setUserAvatar(userAvatar) {
+        var db = firebase.firestore();
+
+        db.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().avatar == this.getUserAvatar){
+                    //doc.set(displayName: userName);
+                }
+            });
+        });
+    }
+
+    set setUserFriends(userFriends) {
+        var db = firebase.firestore();
+
+        db.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().friends == this.getUserFriends){
+                    //doc.set(displayName: userName);
+                }
+            });
+        });
+    }
+};
+
 var user = null; //FIXME
 
 function initialize() {
@@ -118,3 +229,5 @@ function openPrompt() {
 $(function() {
   $('input[name="dates"]').daterangepicker({ startDate: moment(), endDate: moment().add(2, 'day')});
   })
+
+  
