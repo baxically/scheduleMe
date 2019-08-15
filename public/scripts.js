@@ -1,3 +1,6 @@
+//import User from './user.js';
+//ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
+
 var user = null; //FIXME
 
 function initialize() {
@@ -29,10 +32,8 @@ function login() {
             // This gives you a Google Access Token. You can use it to access the Google API.
             var token = result.credential.accessToken;
             // The signed-in user info.
-            var user = result.user;
+            user = result.user;
             // ...
-            //WE WANT THE USER TO CREATE AN ACCOUNT/GIVE US INFORMATION
-            //var db = firebase.firestore();
             var name = user.displayName;
             var email = user.email;
             var avatarURL = user.photoURL;
