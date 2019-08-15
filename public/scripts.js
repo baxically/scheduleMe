@@ -115,5 +115,17 @@ function openPrompt() {
 }
 
 $(function() {
-  $('input[name="dates"]').daterangepicker({ startDate: moment(), endDate: moment().add(2, 'day')});
-  })
+  $('input[name="dates"]').daterangepicker({
+                                           timePicker: true,
+                                           startDate: moment(),
+                                           endDate: moment().add(2, 'day'),
+                                           locale: {
+                                           format: 'M/DD hh:mm A'
+                                           }
+                                           },
+                                           function(start, end, label) {
+                                           console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+                                                       ' to ' + end.format('M/DD hh:mm A'));
+                                           });
+  });
+
