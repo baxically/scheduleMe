@@ -13,10 +13,13 @@ function confirmReset() {
     confirm("Are you sure you want to res this event? All changes will be reverted.")
 }
 
-function verify() {
-    let eventName = document.getElementById("id1");
-    if (!eventName.checkValidity()) {
-    //   document.getElementById("demo").innerHTML = inpObj.validationMessage;
-        alert("event name not created")
+function validateForm() {
+    if (document.getElementById("eventName").value == "") {
+        alert("Name must be filled out");
+        return false;
     }
+    // if (document.getElementById("").value) {
+    //     alert("");
+    //     return false;
+    // }
 }

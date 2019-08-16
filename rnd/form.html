@@ -3,9 +3,9 @@
 </head>
 
 <body>
-    <form>
-        name of event:<input type="text"><br/>
-        add friends:<input type="search"><br/>
+    <form action="formaction.php">
+        name of event:<input type="text" id="eventName"><br/>
+        add friends:<input type="search" id="friends"><br/>
         date:<input id="date_selected" type="date">
         <!-- end date:<input type="date"/><br/> -->
         <!-- start time:<input type="time"/>
@@ -37,7 +37,7 @@
 
         <button id="cancel" onclick="confirmCancel()">Cancel</button>
         <button id="reset" onclick="confirmReset()">Reset</button>
-        <input type="submit" id="create onclick=" oncllick="verify()"></input>
+        <input type="submit" id="create" onclick="validateForm()"></input>
     </form>
 </body>
 
