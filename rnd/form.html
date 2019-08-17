@@ -1,0 +1,44 @@
+<head>
+    Create Hangout
+</head>
+
+<body>
+    <form action="formaction.php">
+        name of event:<input type="text" id="eventName"><br/>
+        add friends:<input type="search" id="friends"><br/>
+        date:<input id="date_selected" type="date">
+        <!-- end date:<input type="date"/><br/> -->
+        <!-- start time:<input type="time"/>
+        end time:<input type="time"/><br/> -->
+        <button id="add_date" onclick="addDate()">Add date</button><br/>
+
+        <ul>
+            Your selected dates:
+            <li>August 12th, 2019</li>
+            <li>August 19th, 2019</li>
+            <li>August 24th, 2019</li>
+            <li id = "s-date"></li>
+        </ul>
+        
+        <ul>
+            Available times:
+            <li>August 12th, 2019 <input type="radio" name="available"></li>
+            <li>August 19th, 2019 <input type="radio" name="available"></li>
+        </ul>
+    
+        <ul>
+            friends:
+            <li>Ally</li>
+            <li>Brandon</li>
+            <li>Chrystal</li>
+            <li>Howard</li>
+            <li>Kevin</li>
+        </ul>
+
+        <button id="cancel" onclick="confirmCancel()">Cancel</button>
+        <button id="reset" onclick="confirmReset()">Reset</button>
+        <input type="submit" id="create" onclick="validateForm()"></input>
+    </form>
+</body>
+
+<script src="./form.js"></script>
