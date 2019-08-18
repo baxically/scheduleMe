@@ -141,9 +141,11 @@ async function getUserData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             let user1 = await userClass();
-            var name = user1.getUserName();
+            var name = await user1.getUserName();
+            var avatar = await user1.getUserAvatar();
             //debugger;
             document.getElementById("username").innerHTML = name;
+            document.getElementById("profilepic").src = avatar;
         } else {
             console.error('user state is broken');
         }
@@ -157,21 +159,6 @@ function openPrompt() {
         "When are you free to host '" + event + "'?";
     }
 }
-
-$(function() {
-  $('input[name="dates"]').daterangepicker({
-        timePicker: true,
-        startDate: moment(),
-        endDate: moment().add(2, 'day'),
-        locale: {
-            format: 'M/DD hh:mm A'
-            }
-        },
-        function(start, end, label) {
-        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-        ' to ' + end.format('M/DD hh:mm A'));
-    });
-});
 
 function listFriends() {
     var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
@@ -198,3 +185,18 @@ function listEvents() {
     
     document.getElementById("eList").innerHTML = event;
 }
+
+$(function() {
+  $('input[name="dates"]').daterangepicker({
+        timePicker: true,
+        startDate: moment(),
+        endDate: moment().add(2, 'day'),
+        locale: {
+            format: 'M/DD hh:mm A'
+        }
+    },
+    function(start, end, label) {
+        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+        ' to ' + end.format('M/DD hh:mm A'));
+    });
+});

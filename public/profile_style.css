@@ -10,15 +10,16 @@ body {
 
 /* Header/logo Title */
 .header {
-    padding: 40px;
+    padding: 80px;
     text-align: center;
     color: white;
-    background: black;
+    background: url("pictures/img_parallax.jpg");
+    background-size: 100%;
 }
 
 /* Increase the font size of the heading */
 .header h1 {
-    font-size: 40px;
+    font-size: 55px;
 }
 
 /* Style the top navigation bar */
@@ -60,7 +61,7 @@ body {
 /* Sidebar/left column */
 .side {
     -ms-flex: 30%; /* IE10 */
-    flex: 30%;
+    flex: 10%;
     background-color: #f1f1f1;
     padding: 20px;
 }
@@ -84,7 +85,8 @@ body {
 .footer {
     padding: 20px;
     text-align: center;
-    background: black;
+    background: url("pictures/img_parallax.jpg");
+    background-size: 100%;
 }
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
@@ -100,4 +102,19 @@ body {
         float: none;
         width: 100%;
     }
+}
+
+.caption {
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #000;
+}
+
+.caption span.border {
+    background-color: #333;
+    color: #fff;
+    padding: 18px;
+    font-size: 45px;
+    letter-spacing: 10px;
 }
