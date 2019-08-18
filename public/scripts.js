@@ -141,9 +141,11 @@ async function getUserData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             let user1 = await userClass();
-            var name = user1.getUserName();
+            var name = await user1.getUserName();
+            var avatar = await user1.getUserAvatar();
             //debugger;
             document.getElementById("username").innerHTML = name;
+            document.getElementById("profilepic").src = avatar;
         } else {
             console.error('user state is broken');
         }
@@ -157,21 +159,6 @@ function openPrompt() {
         "When are you free to host '" + event + "'?";
     }
 }
-
-$(function() {
-  $('input[name="dates"]').daterangepicker({
-        timePicker: true,
-        startDate: moment(),
-        endDate: moment().add(2, 'day'),
-        locale: {
-            format: 'M/DD hh:mm A'
-            }
-        },
-        function(start, end, label) {
-        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-        ' to ' + end.format('M/DD hh:mm A'));
-    });
-});
 
 function listFriends() {
     var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
@@ -199,22 +186,47 @@ function listEvents() {
     document.getElementById("eList").innerHTML = event;
 }
 
-function openSavePrompt() {
-    var eventdb = firebase.firestore();
-
-    eventdb.collection("test").add({
-        name: document.getElementById("nameField").value,
-        age: document.getElementById("ageField").value
-    });
+function addEvent(){
+    createEvent();
+    setTimeout(function(){location.href = 'profile.html';}, 1000);
 }
 
-// var db = firebase.firestore();
-// console.log('before db.set');
-// db.collection("users").doc(profile.profEmail).set({
-// //db.collection("users").add({
-//     //GToken: token,
-//     avatar: profile.profAvatar,
-//     displayName: profile.profName,
-//     email: profile.profEmail,
-//     friends: profile.profFriends
-// })
+function createEvent() {
+    var db = firebase.firestore();
+    var email_ref = "users/" + document.getElementById("friend_email").value;
+
+    db.collection("test").add({
+        // email: document.getElementById("friend_email").value,
+        event: document.getElementById("event_name").value,
+        location: document.getElementById("location_name").value,
+        date: document.getElementById("avail_date").value,
+        friend_name: document.getElementById("friend_name").value,
+        email: db.doc(email_ref)
+        });    
+}
+
+// var eventdb = firebase.firestore();
+
+// eventdb.collection("test").add({
+//     event: document.getElementById("event").value,
+//     location: document.getElementById("location").value,
+//     // date: document.getElementById("date").value,
+//     name: document.getElementById("name").value,
+//     // email: emailReference
+//     email: document.getElementById("email").value
+// });
+
+// $(function() {
+//   $('input[name="dates"]').daterangepicker({
+//         timePicker: true,
+//         startDate: moment(),
+//         endDate: moment().add(2, 'day'),
+//         locale: {
+//             format: 'M/DD hh:mm A'
+//         }
+//     },
+//     function(start, end, label) {
+//         console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+//         ' to ' + end.format('M/DD hh:mm A'));
+//     });
+// });

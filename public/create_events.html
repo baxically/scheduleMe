@@ -32,28 +32,29 @@
         <a href="create_events.html">My Events</a>
         <a href="home.html" class="right" onclick="logout()">Sign Out</a>
     </div>
-        Name of Event:<input type="text" id="nameField"><br>
+        Name of Event:<input type="text" id="event_name"><br>
     <div class="wrapper">
         <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
         
     </div>
     
     <p id="demo"></p>
-    
-    <label>Pick times you're available here:</label>
-    <input type="datetime-local">
+    Write the name of the location:<input type="text" id="location_name"><br>
+    <!-- <label>Pick times you're available here:</label> -->
+    <input type="date" id="avail_date">
     <!-- <input type="text" name="dates" class="form-control pull-right" /> -->
     
     <!-- <div class="fakeimg" style="height:400px;"></div> -->
     
     <p>Who would you like to invite?</p> 
     <!-- later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
-        <input li type="text">Name:</input>
-        <input li type="text">Email:</input>
+        Name:<input type="text" id="friend_name"></input>
+        <input type="text" id="friend_email">Email:</input>
         <br>
-    
+        <button onclick="addEvent()">Create Event</button>
+        
     <div class="wrapper">
-        <button onclick="setTimeout(() => {profileRedirect()}, 3000); openSavePrompt();">Create Event</button>
+        
     </div>
     
     <p id="demo2"></p>
