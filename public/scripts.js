@@ -205,28 +205,17 @@ function createEvent() {
         });    
 }
 
-// var eventdb = firebase.firestore();
-
-// eventdb.collection("test").add({
-//     event: document.getElementById("event").value,
-//     location: document.getElementById("location").value,
-//     // date: document.getElementById("date").value,
-//     name: document.getElementById("name").value,
-//     // email: emailReference
-//     email: document.getElementById("email").value
-// });
-
-// $(function() {
-//   $('input[name="dates"]').daterangepicker({
-//         timePicker: true,
-//         startDate: moment(),
-//         endDate: moment().add(2, 'day'),
-//         locale: {
-//             format: 'M/DD hh:mm A'
-//         }
-//     },
-//     function(start, end, label) {
-//         console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-//         ' to ' + end.format('M/DD hh:mm A'));
-//     });
-// });
+$(function() {
+  $('input[name="dates"]').daterangepicker({
+        timePicker: true,
+        startDate: moment(),
+        endDate: moment().add(2, 'day'),
+        locale: {
+            format: 'M/DD hh:mm A'
+        }
+    },
+    function(start, end, label) {
+        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+        ' to ' + end.format('M/DD hh:mm A'));
+    });
+});
