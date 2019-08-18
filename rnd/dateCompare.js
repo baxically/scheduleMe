@@ -1,11 +1,27 @@
-function compareDates( date1, date2 ) {
-	if ( date1 > date2 )
+function compareDates( startA, endA, startB, endB ) {
+	if ( startA >= endB )
 	{
-		return "Date 2 occurs first";
+		return "No overlap.";
 	}
-	else
+	else if ( startB >= endA )
 	{
-		return "Date 1 occurs first";
+		return "No overlap.";
+	}
+	else if ( startA <= startB && endA >= endB )
+	{
+		return "Overlap!!!";
+	}
+	else if ( startA <= startB && endA < endB )
+	{
+		return "Overlap!!!";
+	}
+	else if ( startA >= startB && endB <= endA )
+	{
+		return "Overlap!!!";
+	}
+	else if ( startA >= startB && endA < endB )
+	{
+		return "Overlap!!!";
 	}
 }
 
