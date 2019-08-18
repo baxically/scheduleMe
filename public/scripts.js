@@ -1,125 +1,163 @@
 //import User from './user.js';
 //ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
 
-// class User {
-//     constructor() {
-//         this.user = null;
-//         this.email = 'Email';
-//         this.displayName = 'Display Name';
-//         this.avatar = 'Avatar';
-//         this.friends = new Array;
-        
+class User {
+    constructor() {
+        this.user = null;
+        this.email = 'Email';
+        this.displayName = 'Display Name';
+        this.avatar = 'Avatar';
+        this.friends = new Array;
+        //IDEA HERE, WHAT IF I POPULATE THESE FIELDS FROM THE DATABASE IN THE CONSTRUCTOR SOMEHOW??????
+        //THEN THE GETTERS JUST RETURN THIS.NAME OR WHATEVER
+    }
 
-//     }
+    //Getters
+    get getUserEmail() {
+        return this.getEmail();
+    }
 
-//     //Getters
-//     get getUserEmail() {
-//         return this.getEmail();
-//     }
+    get getUserName() {
+        return this.getName();
+    }
 
-//     get getUserName() {
-//         return this.getName();
-//     }
+    get getUserAvatar() {
+        return this.getAvatar();
+    }
 
-//     getEmail() {
-//         firebase.auth().onAuthStateChanged(function(user) {
-//             if (user) {
-//                 // User is signed in.
-//                 console.log('user is signed in');
-//                 user = firebase.auth().currentUser;
-//                 //console.log(user.email);
-//                 var email = user.email;
-//                 console.log(email);
-//                 return email;
-//             } else {
-//                 // No user is signed in.
-//                 console.log('user is not signed in');
-//                 return 'Error Obtaining Email';
-//             }
-//         });
-//     }
+    get getUserFriends() {
+        return this.getFriends();
+    }
 
-//     getName() {
-//         //this.getEmail.bind(this)
-//         var db = firebase.firestore();
-//         var userRef = db.collection("users").doc(this.getEmail());
-//         userRef.get().then(function(querySnapshot) {
-//             querySnapshot.forEach(function(doc) {
-//                 return doc.data().displayName;
-//             })
-//         }).catch(function(error) {
-//             console.log("Error getting documents: ", error);
-//         });
-//     }
+    getEmail() {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                console.log('user is signed in');
+                user = firebase.auth().currentUser;
+                //console.log(user.email);
+                var email = user.email;
+                console.log(email);
+                return email;
+            } else {
+                // No user is signed in.
+                console.log('user is not signed in');
+                return 'Error Obtaining Email';
+            }
+        }); 
+    }
 
-//     get getUserAvatar() {
-//         var db = firebase.firestore();
+    getEmailCB(callback) {
+        return new Promise(function(resolve) {
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // User is signed in.
+                    console.log('in getEmailCB');
+                    user = firebase.auth().currentUser;
+                    var email = user.email;
+                    resolve(callback(email));
+                } else {
+                    // No user is signed in.
+                    console.log('user is not signed in');
+                    return 'Error Obtaining Email';
+                }
+            }); 
+        }
+    )}
 
-//         var userRef = db.collection("users");
-//         userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
-//             querySnapshot.forEach(function(doc) {
-//                 return doc.data().avatar;
-//             })
-//         }).catch(function(error) {
-//             console.log("Error getting documents: ", error);
-//         });
-//     }
+    getName() {
+        console.log('in getName');
+        this.displayName = this.getEmailCB(this.getNamePt2)
+        return this.displayName;
+    }
 
-//     get getUserFriends() {
-//         var db = firebase.firestore();
+    getNamePt2(email) {
+        return new Promise(function(resolve) {
+            console.log('in getNamePt2');
+            var db = firebase.firestore();
+            var userRef = db.collection("users").doc(email);
+            userRef.get().then(function(doc) {
+                resolve(doc.data().displayName);
+                //return doc.data().displayName;
+            }).catch(function(error) {
+                console.log("Error getting documents: ", error);
+            });
+        })
 
-//         var userRef = db.collection("users");
-//         userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
-//             querySnapshot.forEach(function(doc) {
-//                 return doc.data().friends;
-//             })
-//         }).catch(function(error) {
-//             console.log("Error getting documents: ", error);
-//         });
-//     }
+    }
 
-//     //Setters
-//     set setUserEmail(userEmail) {
-//             return null;
-//             //NOT GIVING ACCESS FOR MVP
-//     }
+    getAvatar() {
+        var email = this.getEmailCB(this.getAvatarPt2);
+    }
 
-//     set setUserName(userName) {
-//         var db = firebase.firestore();
+    getAvatarPt2(email) {
+        var db = firebase.firestore();
+        var userRef = db.collection("users").doc(email);
+        userRef.get().then(function(doc) {
+                //debugger;
+                return doc.data().avatar;
+        }).catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+    }
 
-//         db.collection("users").get().then((querySnapshot) => {
-//             querySnapshot.forEach((doc) => {
-//                 if(doc.data().email == this.getUserEmail) {
-//                     //doc.set(displayName: userName);
-//                 }
-//             });
-//         });
-//     }
+    getFriends() {
+        var email = this.getEmailCB(this.getFriendPt2);
+    }
+
+    getFriendsPt2() {
+        var db = firebase.firestore();
+        var userRef = db.collection("users").doc(email);
+        userRef.get().then(function(doc) {
+                //debugger;
+                return doc.data().friends;
+        }).catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+    }
+
+    //Setters
+    set setUserEmail(userEmail) {
+            return null;
+            //NOT GIVING ACCESS FOR MVP
+    }
+
+    set setUserName(userName) {
+        var db = firebase.firestore();
+
+        db.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().email == this.getUserEmail) {
+                    //doc.set(displayName: userName);
+                }
+            });
+        });
+    }
     
-//     set setUserAvatar(userAvatar) {
-//         var db = firebase.firestore();
+    set setUserAvatar(userAvatar) {
+        var db = firebase.firestore();
 
-//         db.collection("users").get().then((querySnapshot) => {
-//             querySnapshot.forEach((doc) => {
-//                 if(doc.data().avatar == this.getUserAvatar){
-//                     //doc.set(displayName: userName);
-//                 }
-//             });
-//         });
-//     }
+        db.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().avatar == this.getUserAvatar){
+                    //doc.set(displayName: userName);
+                }
+            });
+        });
+    }
 
-//     set setUserFriends(userFriends) {
-//         var db = firebase.firestore();
+    set setUserFriends(userFriends) {
+        var db = firebase.firestore();
 
-//         db.collection("users").get().then((querySnapshot) => {
-//             querySnapshot.forEach((doc) => {
-//                 if(doc.data().friends == this.getUserFriends){
-//                     //doc.set(displayName: userName);
-//                 }
-//             });
-//         });
-//     }
-// };
+        db.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if(doc.data().friends == this.getUserFriends){
+                    //doc.set(displayName: userName);
+                }
+            });
+        });
+    }
+};
 
 var user = null; //FIXME
 
@@ -209,18 +247,20 @@ function logout() {
     });
 }
 
-function getUserData() {
-    firebase.auth().onAuthStateChanged(function(user) {
+async function getUserData() {
+    firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
-            user = firebase.auth().currentUser;
-            var name = "User's Name";
-            if(user) {
-                console.log('user signed in');
-                name = user.displayName;
-            }
-            //let user1 = new User();
-            //var name = user1.getUserName();
-            document.getElementById("username").innerHTML = name; //FIXME BACK TO 'name'
+            // user = firebase.auth().currentUser;
+            // var name = "User's Name";
+            // if(user) {
+            //     console.log('user signed in');
+            //     name = user.displayName;
+            // }
+            let user1 = await new User();
+            //debugger;
+            var name = await user1.getUserName();
+            //debugger;
+            document.getElementById("username").innerHTML = name;
             // User is signed in.
         } else {
             // No user is signed in.

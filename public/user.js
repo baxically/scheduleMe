@@ -1,12 +1,12 @@
-export default class User {
+class User {
     constructor() {
         this.user = null;
         this.email = 'Email';
         this.displayName = 'Display Name';
         this.avatar = 'Avatar';
         this.friends = new Array;
-        
-
+        //IDEA HERE, WHAT IF I POPULATE THESE FIELDS FROM THE DATABASE IN THE CONSTRUCTOR SOMEHOW??????
+        //THEN THE GETTERS JUST RETURN THIS.NAME OR WHATEVER
     }
 
     //Getters
@@ -16,6 +16,14 @@ export default class User {
 
     get getUserName() {
         return this.getName();
+    }
+
+    get getUserAvatar() {
+        return this.getAvatar();
+    }
+
+    get getUserFriends() {
+        return this.getFriends();
     }
 
     getEmail() {
@@ -33,43 +41,68 @@ export default class User {
                 console.log('user is not signed in');
                 return 'Error Obtaining Email';
             }
-        });
+        }); 
+    }
+
+    getEmailCB(callback) {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                console.log('user is signed in');
+                user = firebase.auth().currentUser;
+                //console.log(user.email);
+                var email = user.email;
+                console.log(email);
+                return callback(email);
+                //return email;
+            } else {
+                // No user is signed in.
+                console.log('user is not signed in');
+                return 'Error Obtaining Email';
+            }
+        }); 
     }
 
     getName() {
-        //this.getEmail.bind(this)
+        var email = this.getEmailCB(this.getNamePt2);
+    }
+
+    getNamePt2(email) {
         var db = firebase.firestore();
-        var userRef = db.collection("users").doc(this.getEmail());
-        userRef.get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
+        var userRef = db.collection("users").doc(email);
+        userRef.get().then(function(doc) {
+                //debugger;
                 return doc.data().displayName;
-            })
         }).catch(function(error) {
             console.log("Error getting documents: ", error);
         });
     }
 
-    get getUserAvatar() {
-        var db = firebase.firestore();
+    getAvatar() {
+        var email = this.getEmailCB(this.getAvatarPt2);
+    }
 
-        var userRef = db.collection("users");
-        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
+    getAvatarPt2(email) {
+        var db = firebase.firestore();
+        var userRef = db.collection("users").doc(email);
+        userRef.get().then(function(doc) {
+                //debugger;
                 return doc.data().avatar;
-            })
         }).catch(function(error) {
             console.log("Error getting documents: ", error);
         });
     }
 
-    get getUserFriends() {
-        var db = firebase.firestore();
+    getFriends() {
+        var email = this.getEmailCB(this.getFriendPt2);
+    }
 
-        var userRef = db.collection("users");
-        userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
+    getFriendsPt2() {
+        var db = firebase.firestore();
+        var userRef = db.collection("users").doc(email);
+        userRef.get().then(function(doc) {
+                //debugger;
                 return doc.data().friends;
-            })
         }).catch(function(error) {
             console.log("Error getting documents: ", error);
         });
