@@ -158,20 +158,20 @@ function openPrompt() {
     }
 }
 
-// $(function() {
-//   $('input[name="dates"]').daterangepicker({
-//         timePicker: true,
-//         startDate: moment(),
-//         endDate: moment().add(2, 'day'),
-//         locale: {
-//             format: 'M/DD hh:mm A'
-//             }
-//         },
-//         function(start, end, label) {
-//         console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-//         ' to ' + end.format('M/DD hh:mm A'));
-//     });
-// });
+$(function() {
+  $('input[name="dates"]').daterangepicker({
+        timePicker: true,
+        startDate: moment(),
+        endDate: moment().add(2, 'day'),
+        locale: {
+            format: 'M/DD hh:mm A'
+            }
+        },
+        function(start, end, label) {
+        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+        ' to ' + end.format('M/DD hh:mm A'));
+    });
+});
 
 function listFriends() {
     var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
@@ -208,8 +208,6 @@ function openSavePrompt() {
     });
 }
 
-
-
 // var db = firebase.firestore();
 // console.log('before db.set');
 // db.collection("users").doc(profile.profEmail).set({
@@ -219,4 +217,4 @@ function openSavePrompt() {
 //     displayName: profile.profName,
 //     email: profile.profEmail,
 //     friends: profile.profFriends
-// });
+// })
