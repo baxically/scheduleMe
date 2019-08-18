@@ -26,31 +26,6 @@ class User {
     }
 };
 
-//This function populates and creates a User object
-async function userClass() {
-    var email;
-    var dataPassIn;
-    
-    var user = firebase.auth().currentUser;
-    email = user.email;
-
-    var db = firebase.firestore();
-    userRef = db.collection('users').doc(email);
-    await userRef.get()
-    .then((doc) => {
-        dataPassIn = {
-            email: email,
-            displayName: doc.data().displayName,
-            avatar: doc.data().avatar,
-            friends: doc.data().friends
-        }
-    }).catch((err) => {console.error("Error getting documents: ", err)})
-    
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
-    //debugger;
-    return user_class;
-}
-
 class userPersonalEvent {
     constructor(title, location, date, dateArray, start, startArray, end, endArray, attendees) {
         this.title = title;
