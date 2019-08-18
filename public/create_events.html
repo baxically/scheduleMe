@@ -32,20 +32,27 @@
         <a href="create_events.html" onclick="create_eventsRedirect()">My Events</a>
         <a href="settings.html" class="right" onclick="settingsRedirect()">Settings</a>
     </div>
+
+    <!-- <form> -->
+        name<input type="text" id="nameField"><br>
+        age<input type="text" id="ageField"><br>
+        <button onclick="setTimeout(() => {profileRedirect()}, 3000); openSavePrompt();">Create Event</button>
+    <!-- </form> -->
     
-    <div class="wrapper">
-        <button type="button" id="eventButton" onclick="openPrompt()">Create event</button>
-    </div>
+    <!-- <div class="wrapper"> -->
+        <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
+        
+    <!-- </div> -->
     
-    <p id="demo"></p>
+    <!-- <p id="demo"></p>
     
     <label>Pick times you're available here:</label>
     <input type="text" name="dates" class="form-control pull-right" />
     
     <div class="fakeimg" style="height:400px;">Event information form</div>
     
-    <p>Who would you like to invite?</p> <!-- later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names-->
-    <ul>
+    <p>Who would you like to invite?</p> later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
+    <!-- <ul>
         <input li type="checkbox" value="name">Friend 1</input>
         <br>
         <input li type="checkbox" value="name">Friend 2</input>
@@ -61,7 +68,7 @@
         <button type="button" id="saveButton" onclick="openSavePrompt()">Save</button>
     </div>
     
-    <p id="demo2"></p>
+    <p id="demo2"></p> -->
     
     <script src="./scripts.js"></script>
     <script src="./config.js"></script>
