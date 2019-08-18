@@ -1,127 +1,139 @@
 //import User from './user.js';
 //ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
 
-// class User {
-//     constructor() {
-//         this.user = null;
-//         this.email = 'Email';
-//         this.displayName = 'Display Name';
-//         this.avatar = 'Avatar';
-//         this.friends = new Array;
-        
+class User {
+    constructor(email, username, avatar, friends) {
+        this.email = email;
+        this.displayName = username;
+        this.avatar = avatar;
+        this.friends = friends;
+    }
 
-//     }
+    getUserEmail() {
+        return this.email;
+    }
 
-//     //Getters
-//     get getUserEmail() {
-//         return this.getEmail();
-//     }
+    getUserName() {
+        return this.displayName;
+    }
 
-//     get getUserName() {
-//         return this.getName();
-//     }
+    getUserAvatar() {
+        return this.avatar;
+    }
 
-//     getEmail() {
-//         firebase.auth().onAuthStateChanged(function(user) {
-//             if (user) {
-//                 // User is signed in.
-//                 console.log('user is signed in');
-//                 user = firebase.auth().currentUser;
-//                 //console.log(user.email);
-//                 var email = user.email;
-//                 console.log(email);
-//                 return email;
-//             } else {
-//                 // No user is signed in.
-//                 console.log('user is not signed in');
-//                 return 'Error Obtaining Email';
-//             }
-//         });
-//     }
+    getUserFriends() {
+        return this.friends;
+    }
+};
 
-//     getName() {
-//         //this.getEmail.bind(this)
-//         var db = firebase.firestore();
-//         var userRef = db.collection("users").doc(this.getEmail());
-//         userRef.get().then(function(querySnapshot) {
-//             querySnapshot.forEach(function(doc) {
-//                 return doc.data().displayName;
-//             })
-//         }).catch(function(error) {
-//             console.log("Error getting documents: ", error);
-//         });
-//     }
-
-//     get getUserAvatar() {
-//         var db = firebase.firestore();
-
-//         var userRef = db.collection("users");
-//         userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
-//             querySnapshot.forEach(function(doc) {
-//                 return doc.data().avatar;
-//             })
-//         }).catch(function(error) {
-//             console.log("Error getting documents: ", error);
-//         });
-//     }
-
-//     get getUserFriends() {
-//         var db = firebase.firestore();
-
-//         var userRef = db.collection("users");
-//         userRef.where("email", "==", this.getUserEmail).get().then(function(querySnapshot) {
-//             querySnapshot.forEach(function(doc) {
-//                 return doc.data().friends;
-//             })
-//         }).catch(function(error) {
-//             console.log("Error getting documents: ", error);
-//         });
-//     }
-
-//     //Setters
-//     set setUserEmail(userEmail) {
-//             return null;
-//             //NOT GIVING ACCESS FOR MVP
-//     }
-
-//     set setUserName(userName) {
-//         var db = firebase.firestore();
-
-//         db.collection("users").get().then((querySnapshot) => {
-//             querySnapshot.forEach((doc) => {
-//                 if(doc.data().email == this.getUserEmail) {
-//                     //doc.set(displayName: userName);
-//                 }
-//             });
-//         });
-//     }
+//This function populates and creates a User object
+async function userClass() {
+    var email;
+    var dataPassIn;
     
-//     set setUserAvatar(userAvatar) {
-//         var db = firebase.firestore();
+    var user = firebase.auth().currentUser;
+    email = user.email;
 
-//         db.collection("users").get().then((querySnapshot) => {
-//             querySnapshot.forEach((doc) => {
-//                 if(doc.data().avatar == this.getUserAvatar){
-//                     //doc.set(displayName: userName);
-//                 }
-//             });
-//         });
-//     }
+    var db = firebase.firestore();
+    userRef = db.collection('users').doc(email);
+    await userRef.get()
+    .then((doc) => {
+        dataPassIn = {
+            email: email,
+            displayName: doc.data().displayName,
+            avatar: doc.data().avatar,
+            friends: doc.data().friends
+        }
+    }).catch((err) => {console.error("Error getting documents: ", err)})
+    
+    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
+    //debugger;
+    return user_class;
+}
 
-//     set setUserFriends(userFriends) {
-//         var db = firebase.firestore();
+class userPersonalEvent {
+    constructor(title, location, date, dateArray, start, startArray, end, endArray, attendees) {
+        this.title = title;
+        this.location = location;
+        this.date = date;
+        this.dateArray = dateArray;
+        this.start = start;
+        this.startArray = startArray;
+        this.end = end;
+        this.endArray = endArray;
+        this.attendees = attendees;
+    }
 
-//         db.collection("users").get().then((querySnapshot) => {
-//             querySnapshot.forEach((doc) => {
-//                 if(doc.data().friends == this.getUserFriends){
-//                     //doc.set(displayName: userName);
-//                 }
-//             });
-//         });
-//     }
-// };
+    getEventTitle() {
+        return this.title;
+    }
 
-var user = null; //FIXME
+    getEventLocation() {
+        return this.location;
+    }
+
+    getEventDate() {
+        return this.date;
+    }
+
+    getEventDates() {
+        return this.dateArray;
+    }
+
+    getEventStart() {
+        return this.start;
+    }
+
+    getEventStarts() {
+        return this.startArray;
+    }
+
+    getEventEnd() {
+        return this.end;
+    }
+
+    getEventEnds() {
+        return this.endArray;
+    }
+
+    getEventAttendees() {
+        return this.attendees;
+    }
+
+};
+
+//This function populates with dummy values and creates an Event object
+async function creatingEvent() {
+
+    var db = firebase.firestore();
+    eventRef = db.collection("EVENTS");
+    
+    var title = "Kevin Demo Event";
+    var location = "Alpha Centari";
+    var date = "Waiting for responces";
+    var dateArray = ["09/21", "09/22", "09/23"];
+    var start = "Waiting for responces";
+    var startArray = ["7:30"];
+    var end = "Waiting for responces";
+    var endArray = ["13:45"];
+    var attendees = ["Beandon", "Alloy", "Howad", "Chrimbal", "Seven"];
+
+    var creation = await new userPersonalEvent(title, location, date, dateArray, start, startArray, end, endArray, attendees);
+
+    eventRef.add({
+        title: creation.getEventTitle(),
+        location: creation.getEventLocation(),
+        chosen_date: creation.getEventDate(),
+        dates: creation.getEventDates(),
+        chosen_start: creation.getEventStart(),
+        starts: creation.getEventStarts(),
+        chosen_end: creation.getEventEnd(),
+        ends: creation.getEventEnds(),
+        attendees: creation.getEventAttendees()
+
+      });
+
+}
 
 function initialize() {
     firebase.initializeApp(firebaseConfig);
@@ -203,28 +215,21 @@ function addUser(profile) {
 
 function logout() {
     firebase.auth().signOut().then(function() {
-        // Sign-out successful.
+        //setTimeout(() => {homeRedirect();}, 500);
     }).catch(function(error) {
-        // An error happened.
+        console.error(error);
     });
 }
 
-function getUserData() {
-    firebase.auth().onAuthStateChanged(function(user) {
+async function getUserData() {
+    firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
-            user = firebase.auth().currentUser;
-            var name = "User's Name";
-            if(user) {
-                console.log('user signed in');
-                name = user.displayName;
-            }
-            //let user1 = new User();
-            //var name = user1.getUserName();
-            document.getElementById("username").innerHTML = name; //FIXME BACK TO 'name'
-            // User is signed in.
+            let user1 = await userClass();
+            var name = user1.getUserName();
+            //debugger;
+            document.getElementById("username").innerHTML = name;
         } else {
-            // No user is signed in.
-            console.log('user state is broken');
+            console.error('user state is broken');
         }
     });
 }
