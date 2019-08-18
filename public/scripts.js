@@ -131,9 +131,9 @@ function addUser(profile) {
 
 function logout() {
     firebase.auth().signOut().then(function() {
-        // Sign-out successful.
+        //setTimeout(() => {homeRedirect();}, 500);
     }).catch(function(error) {
-        // An error happened.
+        console.error(error);
     });
 }
 
@@ -144,9 +144,7 @@ async function getUserData() {
             var name = user1.getUserName();
             //debugger;
             document.getElementById("username").innerHTML = name;
-            // User is signed in.
         } else {
-            // No user is signed in.
             console.error('user state is broken');
         }
     });
