@@ -156,7 +156,7 @@ function profileRedirect() {
 }
 
 function login() {
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL) //
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(function() {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -169,7 +169,7 @@ function login() {
             var email = user.email;
             var avatarURL = user.photoURL;
             var friendList = ["Andre", "Chris", "Ton", "Noah", "Mina", "Morgan", "Jeff", "Brian"];
-    
+
             var profile = {
                 profName: name,
                 profEmail: email,
@@ -180,7 +180,6 @@ function login() {
             addUser(profile);
 
             setTimeout(function(){profileRedirect();}, 1000);
-            
         })
     }).catch(function(error) {
         // Handle Errors here.
@@ -198,9 +197,8 @@ function login() {
     });
 }
 
-function addUser(profile) {
+async function addUser(profile) {
     var db = firebase.firestore();
-    console.log('before db.set');
     db.collection("users").doc(profile.profEmail).set({
     //db.collection("users").add({
         //GToken: token,
@@ -209,7 +207,7 @@ function addUser(profile) {
         email: profile.profEmail,
         friends: profile.profFriends
     });
-    console.log('after db.set');
+    //debugger;
 }
 
 function logout() {
@@ -269,23 +267,45 @@ function listEvents() {
     document.getElementById("eList").innerHTML = event;
 }
 
-function addEvent(){
-    createEvent();
-    setTimeout(function(){location.href = 'profile.html';}, 1000);
+async function addEvent(){
+    var eventId = await createEvent();
+    await addEventReference(eventId);
+    setTimeout(function(){location.href = 'profile.html';} , 1000)
 }
 
-function createEvent() {
+async function createEvent() {
     var db = firebase.firestore();
     var email_ref = "users/" + document.getElementById("friend_email").value;
-
-    db.collection("test").add({
+    var docId = "";
+    //This will be returned to be used in the addEventReference function
+    await db.collection("test").add({
         // email: document.getElementById("friend_email").value,
         event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value,
         friend_name: document.getElementById("friend_name").value,
         email: db.doc(email_ref)
-        });    
+    })
+    .then((docRef) => {
+        docId = docRef.id;
+        return docId;
+    })
+    //debugger;
+    return docId;
+}
+
+async function addEventReference(eventId) {
+    var email;
+    var user = firebase.auth().currentUser;
+    email = user.email;
+
+    var db = firebase.firestore();
+    userRef = db.collection('users').doc(email);
+
+    var docId = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection
+    userRef.update({
+        events: firebase.firestore.FieldValue.arrayUnion(db.doc(docId))
+    });
 }
 
 $(function() {
