@@ -26,7 +26,6 @@ class User {
     }
 };
 
-<<<<<<< HEAD
 class userPersonalEvent {
     constructor(title, location, date, dateArray, start, startArray, end, endArray, attendees) {
         this.title = title;
@@ -110,7 +109,6 @@ async function creatingEvent() {
       });
     }
 
-=======
 //This function populates and creates a User object
 async function userClass() {
     var email;
@@ -134,7 +132,6 @@ async function userClass() {
     var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
     //debugger;
     return user_class;
->>>>>>> master
 }
 
 function initialize() {
