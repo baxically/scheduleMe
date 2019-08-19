@@ -169,7 +169,7 @@ function login() {
             var email = user.email;
             var avatarURL = user.photoURL;
             var friendList = ["Andre", "Chris", "Ton", "Noah", "Mina", "Morgan", "Jeff", "Brian"];
-    
+
             var profile = {
                 profName: name,
                 profEmail: email,
@@ -269,9 +269,12 @@ function listEvents() {
     document.getElementById("eList").innerHTML = event;
 }
 
-function addEvent(){
-    createEvent();
-    setTimeout(function(){location.href = 'profile.html';}, 1000);
+async function addEvent(){
+    var ref = await createEvent();
+    setTimeout(function(){
+        location.href = 'profile.html';
+        setTimeout(function() {addEventReference(ref)}, 1000)
+    }, 1000);
 }
 
 function createEvent() {
@@ -286,6 +289,28 @@ function createEvent() {
         friend_name: document.getElementById("friend_name").value,
         email: db.doc(email_ref)
         });    
+}
+
+async function addEventReference(eventId) {
+    var email;
+    var tempEventArray;
+    var user = firebase.auth().currentUser;
+    email = user.email;
+
+    var db = firebase.firestore();
+    userRef = db.collection('users').doc(email);
+    eventRef = db.collection('test').doc(eventId);
+    await userRef.get()
+    .then((doc) => {
+        tempEventArray = await doc.data().events; //Name "events" will most likely change
+    })
+
+    tempEventArray.push('test/' + eventId);
+
+    userRef.update({
+        events: tempEventArray
+    })
+    //This function needs to be tested still, waiting on howard's create event
 }
 
 $(function() {
