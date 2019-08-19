@@ -302,7 +302,7 @@ async function addEventReference(eventId) {
     var db = firebase.firestore();
     userRef = db.collection('users').doc(email);
 
-    var docId = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection name
+    var docId = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection
     userRef.update({
         events: firebase.firestore.FieldValue.arrayUnion(db.doc(docId))
     });
