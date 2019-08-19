@@ -272,6 +272,25 @@ function listEvents() {
     document.getElementById("eList").innerHTML = event;
 }
 
+function addEvent(){
+    createEvent();
+    setTimeout(function(){location.href = 'profile.html';}, 1000);
+}
+
+function createEvent() {
+    var db = firebase.firestore();
+    var email_ref = "users/" + document.getElementById("friend_email").value;
+
+    db.collection("test").add({
+        // email: document.getElementById("friend_email").value,
+        event: document.getElementById("event_name").value,
+        location: document.getElementById("location_name").value,
+        date: document.getElementById("avail_date").value,
+        friend_name: document.getElementById("friend_name").value,
+        email: db.doc(email_ref)
+        });    
+}
+
 $(function() {
   $('input[name="dates"]').daterangepicker({
         timePicker: true,
