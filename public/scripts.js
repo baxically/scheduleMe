@@ -26,6 +26,89 @@ class User {
     }
 };
 
+class userPersonalEvent {
+    constructor(title, location, date, dateArray, start, startArray, end, endArray, attendees) {
+        this.title = title;
+        this.location = location;
+        this.date = date;
+        this.dateArray = dateArray;
+        this.start = start;
+        this.startArray = startArray;
+        this.end = end;
+        this.endArray = endArray;
+        this.attendees = attendees;
+    }
+
+    getEventTitle() {
+        return this.title;
+    }
+
+    getEventLocation() {
+        return this.location;
+    }
+
+    getEventDate() {
+        return this.date;
+    }
+
+    getEventDates() {
+        return this.dateArray;
+    }
+
+    getEventStart() {
+        return this.start;
+    }
+
+    getEventStarts() {
+        return this.startArray;
+    }
+
+    getEventEnd() {
+        return this.end;
+    }
+
+    getEventEnds() {
+        return this.endArray;
+    }
+
+    getEventAttendees() {
+        return this.attendees;
+    }
+
+};
+
+//This function populates with dummy values and creates an Event object
+async function creatingEvent() {
+
+    var db = firebase.firestore();
+    eventRef = db.collection("EVENTS");
+    
+    var title = "Kevin Demo Event";
+    var location = "Alpha Centari";
+    var date = "Waiting for responces";
+    var dateArray = ["09/21", "09/22", "09/23"];
+    var start = "Waiting for responces";
+    var startArray = ["7:30"];
+    var end = "Waiting for responces";
+    var endArray = ["13:45"];
+    var attendees = ["Beandon", "Alloy", "Howad", "Chrimbal", "Seven"];
+
+    var creation = await new userPersonalEvent(title, location, date, dateArray, start, startArray, end, endArray, attendees);
+
+    eventRef.add({
+        title: creation.getEventTitle(),
+        location: creation.getEventLocation(),
+        chosen_date: creation.getEventDate(),
+        dates: creation.getEventDates(),
+        chosen_start: creation.getEventStart(),
+        starts: creation.getEventStarts(),
+        chosen_end: creation.getEventEnd(),
+        ends: creation.getEventEnds(),
+        attendees: creation.getEventAttendees()
+
+      });
+    }
+
 //This function populates and creates a User object
 async function userClass() {
     var email;
@@ -141,9 +224,11 @@ async function getUserData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             let user1 = await userClass();
-            var name = user1.getUserName();
+            var name = await user1.getUserName();
+            var avatar = await user1.getUserAvatar();
             //debugger;
             document.getElementById("username").innerHTML = name;
+            document.getElementById("profilepic").src = avatar;
         } else {
             console.error('user state is broken');
         }
@@ -157,21 +242,6 @@ function openPrompt() {
         "When are you free to host '" + event + "'?";
     }
 }
-
-$(function() {
-  $('input[name="dates"]').daterangepicker({
-        timePicker: true,
-        startDate: moment(),
-        endDate: moment().add(2, 'day'),
-        locale: {
-            format: 'M/DD hh:mm A'
-            }
-        },
-        function(start, end, label) {
-        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-        ' to ' + end.format('M/DD hh:mm A'));
-    });
-});
 
 function listFriends() {
     var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
@@ -198,3 +268,37 @@ function listEvents() {
     
     document.getElementById("eList").innerHTML = event;
 }
+
+function addEvent(){
+    createEvent();
+    setTimeout(function(){location.href = 'profile.html';}, 1000);
+}
+
+function createEvent() {
+    var db = firebase.firestore();
+    var email_ref = "users/" + document.getElementById("friend_email").value;
+
+    db.collection("test").add({
+        // email: document.getElementById("friend_email").value,
+        event: document.getElementById("event_name").value,
+        location: document.getElementById("location_name").value,
+        date: document.getElementById("avail_date").value,
+        friend_name: document.getElementById("friend_name").value,
+        email: db.doc(email_ref)
+        });    
+}
+
+$(function() {
+  $('input[name="dates"]').daterangepicker({
+        timePicker: true,
+        startDate: moment(),
+        endDate: moment().add(2, 'day'),
+        locale: {
+            format: 'M/DD hh:mm A'
+        }
+    },
+    function(start, end, label) {
+        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+        ' to ' + end.format('M/DD hh:mm A'));
+    });
+});

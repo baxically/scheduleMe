@@ -32,33 +32,28 @@
         <a href="create_events.html">My Events</a>
         <a href="home.html" class="right" onclick="logout()">Sign Out</a>
     </div>
-    
+        Name of Event:<input type="text" id="event_name"><br>
     <div class="wrapper">
-        <button type="button" id="eventButton" onclick="openPrompt()">Create event</button>
+        <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
+        
     </div>
     
     <p id="demo"></p>
-    
-    <label>Pick times you're available here:</label>
+    Write the name of the location:<input type="text" id="location_name"><br>
+    <!-- <label>Pick times you're available here:</label> -->
+    When will you be free?<input type="date" id="avail_date"><br>
     <input type="text" name="dates" class="form-control pull-right" />
     
-    <div class="fakeimg" style="height:400px;">Event information form</div>
+    <div class="fakeimg" style="height:400px;"></div>
     
-    <p>Who would you like to invite?</p> <!-- later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names-->
-    <ul>
-        <input li type="checkbox" value="name">Friend 1</input>
+    <p>Who would you like to invite?</p> 
+    <!-- later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
+        Name:<input type="text" id="friend_name">
+        Email:<input type="text" id="friend_email">
         <br>
-        <input li type="checkbox" value="name">Friend 2</input>
-        <br>
-        <input li type="checkbox" value="name">Friend 3</input>
-        <br>
-        <input li type="checkbox" value="name">Friend 4</input>
-        <br>
-        <input li type="checkbox" value="name">Friend 5</input>
-    </ul>
-    
-    <div class="wrapper">
-        <button type="button" id="saveButton" onclick="openSavePrompt()">Save</button>
+  
+        <button onclick="addEvent()">Create Event</button>
+
     </div>
     
     <p id="demo2"></p>
