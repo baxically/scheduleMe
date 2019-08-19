@@ -71,37 +71,9 @@ class userPersonalEvent {
 
 };
 
-//This function populates with dummy values and creates an Event object
-// async function creatingEvent() {
-
-//     var email;
-//     var dataPassIn;
-    
-//     var user = firebase.auth().currentUser;
-//     email = user.email;
-
-//     var db = firebase.firestore();
-//     userRef = db.collection('users').doc(email);
-//     await userRef.get()
-//     .then((doc) => {
-//         dataPassIn = {
-//             email: email,
-//             displayName: doc.data().displayName,
-//             avatar: doc.data().avatar,
-//             friends: doc.data().friends
-//         }
-//     }).catch((err) => {console.error("Error getting documents: ", err)})
-    
-//     var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
-//     //debugger;
-//     return user_class;
-
-// }
-
-//This function populates and creates a Event object from firebase data
-async function eventClass(eventIndex) {
+async function userClass() {
     var email;
-    var dataUserPassIn;
+    var dataPassIn;
     
     var user = firebase.auth().currentUser;
     email = user.email;
@@ -110,12 +82,25 @@ async function eventClass(eventIndex) {
     userRef = db.collection('users').doc(email);
     await userRef.get()
     .then((doc) => {
-        dataUserPassIn = {
-            events: doc.data().events,
+        dataPassIn = {
+            email: email,
+            displayName: doc.data().displayName,
+            avatar: doc.data().avatar,
+            friends: doc.data().friends
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
+    
+    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
+    //debugger;
+    return user_class;
+}
 
-    var specific_event = dataUserPassIn.events[eventIndex];
+//This function populates and creates a Event object from firebase data
+async function eventClass(eventIndex) {
+    let tempUser = await userClass();
+
+
+    var specific_event = tempUser.getUserEvents()[eventIndex];
 
     eventRef = db.collection("test").doc(specific_event);
     await eventRef.get()
