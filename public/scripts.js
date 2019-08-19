@@ -27,15 +27,9 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(title, location, date, dateArray, start, startArray, end, endArray, attendees) {
+    constructor(title, location, attendees) {
         this.title = title;
         this.location = location;
-        this.date = date;
-        this.dateArray = dateArray;
-        this.start = start;
-        this.startArray = startArray;
-        this.end = end;
-        this.endArray = endArray;
         this.attendees = attendees;
     }
 
@@ -47,29 +41,29 @@ class userPersonalEvent {
         return this.location;
     }
 
-    getEventDate() {
-        return this.date;
-    }
+    // getEventDate() {
+    //     return this.date;
+    // }
 
-    getEventDates() {
-        return this.dateArray;
-    }
+    // getEventDates() {
+    //     return this.dateArray;
+    // }
 
-    getEventStart() {
-        return this.start;
-    }
+    // getEventStart() {
+    //     return this.start;
+    // }
 
-    getEventStarts() {
-        return this.startArray;
-    }
+    // getEventStarts() {
+    //     return this.startArray;
+    // }
 
-    getEventEnd() {
-        return this.end;
-    }
+    // getEventEnd() {
+    //     return this.end;
+    // }
 
-    getEventEnds() {
-        return this.endArray;
-    }
+    // getEventEnds() {
+    //     return this.endArray;
+    // }
 
     getEventAttendees() {
         return this.attendees;
@@ -78,41 +72,36 @@ class userPersonalEvent {
 };
 
 //This function populates with dummy values and creates an Event object
-async function creatingEvent() {
+// async function creatingEvent() {
 
-    var db = firebase.firestore();
-    eventRef = db.collection("EVENTS");
+//     var email;
+//     var dataPassIn;
     
-    var title = "Kevin Demo Event";
-    var location = "Alpha Centari";
-    var date = "Waiting for responces";
-    var dateArray = ["09/21", "09/22", "09/23"];
-    var start = "Waiting for responces";
-    var startArray = ["7:30"];
-    var end = "Waiting for responces";
-    var endArray = ["13:45"];
-    var attendees = ["Beandon", "Alloy", "Howad", "Chrimbal", "Seven"];
+//     var user = firebase.auth().currentUser;
+//     email = user.email;
 
-    var creation = await new userPersonalEvent(title, location, date, dateArray, start, startArray, end, endArray, attendees);
+//     var db = firebase.firestore();
+//     userRef = db.collection('users').doc(email);
+//     await userRef.get()
+//     .then((doc) => {
+//         dataPassIn = {
+//             email: email,
+//             displayName: doc.data().displayName,
+//             avatar: doc.data().avatar,
+//             friends: doc.data().friends
+//         }
+//     }).catch((err) => {console.error("Error getting documents: ", err)})
+    
+//     var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
+//     //debugger;
+//     return user_class;
 
-    eventRef.add({
-        title: creation.getEventTitle(),
-        location: creation.getEventLocation(),
-        chosen_date: creation.getEventDate(),
-        dates: creation.getEventDates(),
-        chosen_start: creation.getEventStart(),
-        starts: creation.getEventStarts(),
-        chosen_end: creation.getEventEnd(),
-        ends: creation.getEventEnds(),
-        attendees: creation.getEventAttendees()
+// }
 
-      });
-    }
-
-//This function populates and creates a User object
-async function userClass() {
+//This function populates and creates a Event object from firebase data
+async function eventClass(eventIndex) {
     var email;
-    var dataPassIn;
+    var dataUserPassIn;
     
     var user = firebase.auth().currentUser;
     email = user.email;
@@ -121,17 +110,27 @@ async function userClass() {
     userRef = db.collection('users').doc(email);
     await userRef.get()
     .then((doc) => {
-        dataPassIn = {
-            email: email,
-            displayName: doc.data().displayName,
-            avatar: doc.data().avatar,
-            friends: doc.data().friends
+        dataUserPassIn = {
+            events: doc.data().events,
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
+
+    var specific_event = dataUserPassIn.events[eventIndex];
+
+    eventRef = db.collection("test").doc(specific_event);
+    await eventRef.get()
+    .then((doc) => {
+        dataEventPassIn = {
+            title: doc.data().title,
+            location: doc.data().location,
+            attendees: doc.data().attendees
+        }
+    }).catch((err) => {console.error("Error getting documents: ", err)})
+
     
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
+    var event_class = new userPersonalEvent(dataEventPassIn.title, dataEventPassIn.location, dataEventPassIn.attendees);
     //debugger;
-    return user_class;
+    return event_class;
 }
 
 function initialize() {
