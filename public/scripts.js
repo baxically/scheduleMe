@@ -32,89 +32,36 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(title, location, date, dateArray, start, startArray, end, endArray, attendees) {
-        this.title = title;
-        this.location = location;
+    constructor(date, emails, event, friend_names, location) {
         this.date = date;
-        this.dateArray = dateArray;
-        this.start = start;
-        this.startArray = startArray;
-        this.end = end;
-        this.endArray = endArray;
-        this.attendees = attendees;
-    }
-
-    getEventTitle() {
-        return this.title;
-    }
-
-    getEventLocation() {
-        return this.location;
+        this.emails = emails;
+        this.event = event;
+        this.friend_names = friend_names;
+        this.location = location;
     }
 
     getEventDate() {
         return this.date;
     }
 
-    getEventDates() {
-        return this.dateArray;
+    getEventEmails() {
+        return this.emails;
     }
 
-    getEventStart() {
-        return this.start;
+    getEventTitle() {
+        return this.event;
     }
 
-    getEventStarts() {
-        return this.startArray;
+    getEventFriends() {
+        return this.friend_names;
     }
 
-    getEventEnd() {
-        return this.end;
-    }
-
-    getEventEnds() {
-        return this.endArray;
-    }
-
-    getEventAttendees() {
-        return this.attendees;
+    getEventLocation() {
+        return this.location;
     }
 
 };
 
-//This function populates with dummy values and creates an Event object
-async function creatingEvent() {
-
-    var db = firebase.firestore();
-    eventRef = db.collection("EVENTS");
-    
-    var title = "Kevin Demo Event";
-    var location = "Alpha Centari";
-    var date = "Waiting for responces";
-    var dateArray = ["09/21", "09/22", "09/23"];
-    var start = "Waiting for responces";
-    var startArray = ["7:30"];
-    var end = "Waiting for responces";
-    var endArray = ["13:45"];
-    var attendees = ["Beandon", "Alloy", "Howad", "Chrimbal", "Seven"];
-
-    var creation = await new userPersonalEvent(title, location, date, dateArray, start, startArray, end, endArray, attendees);
-
-    eventRef.add({
-        title: creation.getEventTitle(),
-        location: creation.getEventLocation(),
-        chosen_date: creation.getEventDate(),
-        dates: creation.getEventDates(),
-        chosen_start: creation.getEventStart(),
-        starts: creation.getEventStarts(),
-        chosen_end: creation.getEventEnd(),
-        ends: creation.getEventEnds(),
-        attendees: creation.getEventAttendees()
-
-      });
-    }
-
-//This function populates and creates a User object
 async function userClass() {
     var email;
     var dataPassIn;
@@ -139,6 +86,29 @@ async function userClass() {
     var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends, dataPassIn.events);
     //debugger;
     return user_class;
+}
+
+// This function populates and creates a Event object from firebase data
+// Currently, eventRef is a string. Will adjust for reference when confirmed by others.
+async function eventClass(eventRef) {
+
+    var db = firebase.firestore();
+
+    eventRef = db.collection("test").doc(eventRef);
+    await eventRef.get()
+    .then((doc) => {
+        dataEventPassIn = {
+            date: doc.data().date,
+            emails: doc.data().emails,
+            event: doc.data().event,
+            friend_names: doc.data().friend_names,
+            location: doc.data().location
+        }
+    }).catch((err) => {console.error("Error getting documents: ", err)})
+
+    
+    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.event, dataEventPassIn.friend_names, dataEventPassIn.location);
+    return event_class;
 }
 
 function initialize() {
@@ -167,26 +137,36 @@ function login() {
     .then(function() {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-            // The signed-in user info.
-            user = result.user;
-            // ...
-            var name = user.displayName;
-            var email = user.email;
-            var avatarURL = user.photoURL;
-            //var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
-
-            var profile = {
-                profName: name,
-                profEmail: email,
-                profAvatar: avatarURL
-                //profFriends: friendList
-            };
+            var db = firebase.firestore();
+            var docRef = db.collection("users").doc(result.user.email);
             
-            addUser(profile);
+            docRef.get().then( (doc) => {
+                if(!doc.exists) {
+                    // This gives you a Google Access Token. You can use it to access the Google API.
+                    var token = result.credential.accessToken;
+                    // The signed-in user info.
+                    user = result.user;
+                    // ...
+                    var name = user.displayName;
+                    var email = user.email;
+                    var avatarURL = user.photoURL;
+                    //var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
 
-            setTimeout(function(){profileRedirect();}, 1000);
+                    var profile = {
+                        profName: name,
+                        profEmail: email,
+                        profAvatar: avatarURL
+                        //profFriends: friendList
+                    };
+                    
+                    addUser(profile);
+
+                    setTimeout(function(){profileRedirect();}, 1000);
+                }
+                else {
+                    profileRedirect(); // no need to create new class
+                }
+            })
         })
     }).catch(function(error) {
         // Handle Errors here.
