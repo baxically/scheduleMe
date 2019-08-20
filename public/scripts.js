@@ -119,6 +119,7 @@ async function userClass() {
     var email;
     var dataPassIn;
     
+    //debugger;
     var user = firebase.auth().currentUser;
     email = user.email;
 
@@ -174,7 +175,7 @@ function login() {
             var name = user.displayName;
             var email = user.email;
             var avatarURL = user.photoURL;
-            var friendList = ["Andre", "Chris", "Ton", "Noah", "Mina", "Morgan", "Jeff", "Brian"];
+            var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
 
             var profile = {
                 profName: name,
@@ -211,7 +212,7 @@ async function addUser(profile) {
         avatar: profile.profAvatar,
         displayName: profile.profName,
         email: profile.profEmail,
-        friends: profile.profFriends
+        friends: db.doc(profile.profFriends)
     });
     //debugger;
 }
@@ -224,7 +225,7 @@ function logout() {
     });
 }
 
-async function getUserData() {
+async function getProfileData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             let user1 = await userClass();
@@ -233,6 +234,8 @@ async function getUserData() {
             //debugger;
             document.getElementById("username").innerHTML = name;
             document.getElementById("profilepic").src = avatar;
+            listEvents(user1);
+            listFriends(user1);
         } else {
             console.error('user state is broken');
         }
@@ -247,55 +250,78 @@ function openPrompt() {
     }
 }
 
-async function listFriends() {
-    let user1 = await userClass();
-    var staticFriends = await user1.getUserFriends();
+async function listFriends(user) {
+    var staticFriends = await user.getUserFriends();
     
     var person = "";
-    
-    for(var i = 0; i < staticFriends.length; i++)
+    if(staticFriends != null)
     {
-        var name = await staticFriends[i].get().then((doc) => {
-            return doc.data().displayName;
-        });
-        person += "<li>" + name + "</li> <br>";
+        for(var i = 0; i < staticFriends.length; i++)
+        {
+            var name = await staticFriends[i].get().then((doc) => {
+                return doc.data().displayName;
+            });
+            person += "<li>" + name + "</li> <br>";
+        }
+        
+        document.getElementById("fList").innerHTML = person;
     }
-    
-    document.getElementById("fList").innerHTML = person;
+    else
+    {
+        person += "You have no friends";
+        document.getElementById("fList").innerHTML = person;
+    }
 }
 
-async function listEvents() {
-    let user1 = await userClass();
-    var staticEvents = user1.getUserEvents(); //Function doesn't exist yet
+async function listEvents(user) {
+    var staticEvents = await user.getUserEvents();
     
-    var event = "";
+    var events = "";
     
-    for(var i = 0; i < staticEvents.length; i++)
+    if(staticEvents != null)
     {
-        var eventName = await staticEvents[i].get().then((doc) => {
-            return doc.data().event;
-        });
-        event += "<li>" + eventName + "</li> <br>";
+        for(var i = 0; i < staticEvents.length; i++)
+        {
+            var eventName = await staticEvents[i].get().then((doc) => {
+                return doc.data().event;
+            });
+            events += "<li>" + eventName + "</li> <br>";
+        }
+        
+        document.getElementById("eList").innerHTML = events;
     }
-    
-    document.getElementById("eList").innerHTML = event;
+    else
+    {
+        events += "You have no events";
+        document.getElementById("eList").innerHTML = events;
+    }
 }
 
 async function addFriends() {
     var db = firebase.firestore();
     var fEmail = document.getElementById("friendsEmail").value;
-    var friendRef = 'users/' + fEmail;
+    var docRef = db.collection('users').doc(fEmail);
     
-    let user1 = await userClass();
-    var myEmail = user1.getUserEmail();
-    var myRef = db.collection('users').doc(myEmail);
-    
-    myRef.update({
-        friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
+    docRef.get().then(async (doc) => {
+        if(doc.exists) {
+            var friendRef = 'users/' + fEmail;
+                      
+            let user1 = await userClass();
+            var myEmail = user1.getUserEmail();
+            var myRef = db.collection('users').doc(myEmail);
+            
+            myRef.update({
+            friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
+            });
+        }
+        else
+        {
+            alert("This user doesn't exist!");
+        }
     });
 }
 
-async function addEvent(){
+async function addEvent() {
     var eventId = await createEvent();
     await addEventReference(eventId);
     setTimeout(function(){location.href = 'profile.html';} , 1000)
