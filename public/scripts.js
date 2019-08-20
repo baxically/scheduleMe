@@ -243,30 +243,42 @@ function openPrompt() {
     }
 }
 
-function listFriends() {
-    var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
+async function listFriends() {
+    let user1 = await userClass();
+    var staticFriends = await user1.getUserFriends();
     
     var person = "";
     
     for(var i = 0; i < staticFriends.length; i++)
     {
-        person += "<li>" + staticFriends[i] + "</li> <br>";
+        var name = await staticFriends[i].get().then((doc) => {
+            return doc.data().displayName;
+        });
+        person += "<li>" + name + "</li> <br>";
     }
     
     document.getElementById("fList").innerHTML = person;
 }
 
-function listEvents() {
-    var staticEvents = ["Lan @ Alex's", "Hot Pot @ Aaron's", "Kyle's Birthday Party"];
+async function listEvents() {
+    let user1 = await userClass();
+    var staticEvents = user1.getUserEvents(); //Function doesn't exist yet
     
     var event = "";
     
     for(var i = 0; i < staticEvents.length; i++)
     {
-        event += "<li>" + staticEvents[i] + "</li> <br>";
+        var eventName = await staticEvents[i].get().then((doc) => {
+            return doc.data().event;
+        });
+        event += "<li>" + eventName + "</li> <br>";
     }
     
     document.getElementById("eList").innerHTML = event;
+}
+
+function addFriend() {
+    
 }
 
 function addEvent(){
