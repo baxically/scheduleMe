@@ -161,7 +161,7 @@ function login() {
                     
                     addUser(profile);
 
-                    setTimeout(function(){profileRedirect();}, 1000);
+                    setTimeout(function(){profileRedirect();}, 2000);
                 }
                 else {
                     profileRedirect(); // no need to create new class
