@@ -164,7 +164,7 @@ function login() {
                     setTimeout(function(){profileRedirect();}, 1000);
                 }
                 else {
-                    profileRedirect();
+                    profileRedirect(); // no need to create new class
                 }
             })
         })
