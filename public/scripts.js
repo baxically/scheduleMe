@@ -281,20 +281,24 @@ async function listEvents() {
     document.getElementById("eList").innerHTML = event;
 }
 
-<<<<<<< HEAD
-function addFriend() {
+async function addFriends() {
+    var db = firebase.firestore();
+    var fEmail = document.getElementById("friendsEmail").value;
+    var friendRef = 'users/' + fEmail;
     
+    let user1 = await userClass();
+    var myEmail = user1.getUserEmail();
+    var myRef = db.collection('users').doc(myEmail);
+    
+    myRef.update({
+        friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
+    });
 }
 
-function addEvent(){
-    createEvent();
-    setTimeout(function(){location.href = 'profile.html';}, 1000);
-=======
 async function addEvent(){
     var eventId = await createEvent();
     await addEventReference(eventId);
     setTimeout(function(){location.href = 'profile.html';} , 1000)
->>>>>>> b2bdafb20694d86545868daebdb34c0d356854be
 }
 
 async function createEvent() {
@@ -324,11 +328,11 @@ async function addEventReference(eventId) {
     email = user.email;
 
     var db = firebase.firestore();
-    userRef = db.collection('users').doc(email);
+    var userRef = db.collection('users').doc(email);
 
-    var docId = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection
+    var eventRef = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection
     userRef.update({
-        events: firebase.firestore.FieldValue.arrayUnion(db.doc(docId))
+        events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
     });
 }
 
