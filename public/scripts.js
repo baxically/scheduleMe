@@ -2,11 +2,12 @@
 //ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
 
 class User {
-    constructor(email, username, avatar, friends) {
+    constructor(email, username, avatar, friends, events) {
         this.email = email;
         this.displayName = username;
         this.avatar = avatar;
         this.friends = friends;
+        this.events = events;
     }
 
     getUserEmail() {
@@ -23,6 +24,10 @@ class User {
 
     getUserFriends() {
         return this.friends;
+    }
+
+    getUserEvents() {
+        return this.events;
     }
 };
 
@@ -125,11 +130,12 @@ async function userClass() {
             email: email,
             displayName: doc.data().displayName,
             avatar: doc.data().avatar,
-            friends: doc.data().friends
+            friends: doc.data().friends,
+            events: doc.data().events
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
     
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
+    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends, dataPassIn.events);
     //debugger;
     return user_class;
 }
