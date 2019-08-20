@@ -167,26 +167,36 @@ function login() {
     .then(function() {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-            // The signed-in user info.
-            user = result.user;
-            // ...
-            var name = user.displayName;
-            var email = user.email;
-            var avatarURL = user.photoURL;
-            var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
-
-            var profile = {
-                profName: name,
-                profEmail: email,
-                profAvatar: avatarURL,
-                profFriends: friendList
-            };
+            var db = firebase.firestore();
+            var docRef = db.collection("users").doc(result.user.email);
             
-            addUser(profile);
+            docRef.get().then( (doc) => {
+                if(!doc.exists) {
+                    // This gives you a Google Access Token. You can use it to access the Google API.
+                    var token = result.credential.accessToken;
+                    // The signed-in user info.
+                    user = result.user;
+                    // ...
+                    var name = user.displayName;
+                    var email = user.email;
+                    var avatarURL = user.photoURL;
+                    //var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
 
-            setTimeout(function(){profileRedirect();}, 1000);
+                    var profile = {
+                        profName: name,
+                        profEmail: email,
+                        profAvatar: avatarURL
+                        //profFriends: friendList
+                    };
+                    
+                    addUser(profile);
+
+                    setTimeout(function(){profileRedirect();}, 1000);
+                }
+                else {
+                    profileRedirect();
+                }
+            })
         })
     }).catch(function(error) {
         // Handle Errors here.
@@ -211,8 +221,8 @@ async function addUser(profile) {
         //GToken: token,
         avatar: profile.profAvatar,
         displayName: profile.profName,
-        email: profile.profEmail,
-        friends: db.doc(profile.profFriends)
+        email: profile.profEmail
+        //friends: db.doc(profile.profFriends[0])
     });
     //debugger;
 }
