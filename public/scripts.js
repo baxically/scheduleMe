@@ -2,11 +2,12 @@
 //ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
 
 class User {
-    constructor(email, username, avatar, friends) {
+    constructor(email, username, avatar, friends, events) {
         this.email = email;
         this.displayName = username;
         this.avatar = avatar;
         this.friends = friends;
+        this.events = events;
     }
 
     getUserEmail() {
@@ -23,6 +24,10 @@ class User {
 
     getUserFriends() {
         return this.friends;
+    }
+
+    getUserEvents() {
+        return this.events;
     }
 };
 
@@ -114,6 +119,7 @@ async function userClass() {
     var email;
     var dataPassIn;
     
+    //debugger;
     var user = firebase.auth().currentUser;
     email = user.email;
 
@@ -125,11 +131,12 @@ async function userClass() {
             email: email,
             displayName: doc.data().displayName,
             avatar: doc.data().avatar,
-            friends: doc.data().friends
+            friends: doc.data().friends,
+            events: doc.data().events
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
     
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends);
+    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends, dataPassIn.events);
     //debugger;
     return user_class;
 }
@@ -156,7 +163,7 @@ function profileRedirect() {
 }
 
 function login() {
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL) //
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(function() {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -168,19 +175,18 @@ function login() {
             var name = user.displayName;
             var email = user.email;
             var avatarURL = user.photoURL;
-            var friendList = ["Andre", "Chris", "Ton", "Noah", "Mina", "Morgan", "Jeff", "Brian"];
-    
+            //var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
+
             var profile = {
                 profName: name,
                 profEmail: email,
-                profAvatar: avatarURL,
-                profFriends: friendList
+                profAvatar: avatarURL
+                //profFriends: friendList
             };
             
             addUser(profile);
 
             setTimeout(function(){profileRedirect();}, 1000);
-            
         })
     }).catch(function(error) {
         // Handle Errors here.
@@ -198,18 +204,17 @@ function login() {
     });
 }
 
-function addUser(profile) {
+async function addUser(profile) {
     var db = firebase.firestore();
-    console.log('before db.set');
     db.collection("users").doc(profile.profEmail).set({
     //db.collection("users").add({
         //GToken: token,
         avatar: profile.profAvatar,
         displayName: profile.profName,
-        email: profile.profEmail,
-        friends: profile.profFriends
+        email: profile.profEmail
+        //friends: db.doc(profile.profFriends[0])
     });
-    console.log('after db.set');
+    //debugger;
 }
 
 function logout() {
@@ -220,7 +225,7 @@ function logout() {
     });
 }
 
-async function getUserData() {
+async function getProfileData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             let user1 = await userClass();
@@ -229,6 +234,8 @@ async function getUserData() {
             //debugger;
             document.getElementById("username").innerHTML = name;
             document.getElementById("profilepic").src = avatar;
+            listEvents(user1);
+            listFriends(user1);
         } else {
             console.error('user state is broken');
         }
@@ -243,49 +250,116 @@ function openPrompt() {
     }
 }
 
-function listFriends() {
-    var staticFriends = ["Alex", "Brianna", "Calvin", "Hailey", "Kristy"];
+async function listFriends(user) {
+    var staticFriends = await user.getUserFriends();
     
     var person = "";
-    
-    for(var i = 0; i < staticFriends.length; i++)
+    if(staticFriends != null)
     {
-        person += "<li>" + staticFriends[i] + "</li> <br>";
+        for(var i = 0; i < staticFriends.length; i++)
+        {
+            var name = await staticFriends[i].get().then((doc) => {
+                return doc.data().displayName;
+            });
+            person += "<li>" + name + "</li> <br>";
+        }
+        
+        document.getElementById("fList").innerHTML = person;
     }
-    
-    document.getElementById("fList").innerHTML = person;
-}
-
-function listEvents() {
-    var staticEvents = ["Lan @ Alex's", "Hot Pot @ Aaron's", "Kyle's Birthday Party"];
-    
-    var event = "";
-    
-    for(var i = 0; i < staticEvents.length; i++)
+    else
     {
-        event += "<li>" + staticEvents[i] + "</li> <br>";
+        person += "You have no friends";
+        document.getElementById("fList").innerHTML = person;
     }
+}
+
+async function listEvents(user) {
+    var staticEvents = await user.getUserEvents();
     
-    document.getElementById("eList").innerHTML = event;
+    var events = "";
+    
+    if(staticEvents != null)
+    {
+        for(var i = 0; i < staticEvents.length; i++)
+        {
+            var eventName = await staticEvents[i].get().then((doc) => {
+                return doc.data().event;
+            });
+            events += "<li>" + eventName + "</li> <br>";
+        }
+        
+        document.getElementById("eList").innerHTML = events;
+    }
+    else
+    {
+        events += "You have no events";
+        document.getElementById("eList").innerHTML = events;
+    }
 }
 
-function addEvent(){
-    createEvent();
-    setTimeout(function(){location.href = 'profile.html';}, 1000);
+async function addFriends() {
+    var db = firebase.firestore();
+    var fEmail = document.getElementById("friendsEmail").value;
+    var docRef = db.collection('users').doc(fEmail);
+    
+    docRef.get().then(async (doc) => {
+        if(doc.exists) {
+            var friendRef = 'users/' + fEmail;
+                      
+            let user1 = await userClass();
+            var myEmail = user1.getUserEmail();
+            var myRef = db.collection('users').doc(myEmail);
+            
+            myRef.update({
+            friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
+            });
+        }
+        else
+        {
+            alert("This user doesn't exist!");
+        }
+    });
 }
 
-function createEvent() {
+async function addEvent() {
+    var eventId = await createEvent();
+    await addEventReference(eventId);
+    setTimeout(function(){location.href = 'profile.html';} , 1000)
+}
+
+async function createEvent() {
     var db = firebase.firestore();
     var email_ref = "users/" + document.getElementById("friend_email").value;
-
-    db.collection("test").add({
+    var docId = "";
+    //This will be returned to be used in the addEventReference function
+    await db.collection("test").add({
         // email: document.getElementById("friend_email").value,
         event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value,
         friend_name: document.getElementById("friend_name").value,
         email: db.doc(email_ref)
-        });    
+    })
+    .then((docRef) => {
+        docId = docRef.id;
+        return docId;
+    })
+    //debugger;
+    return docId;
+}
+
+async function addEventReference(eventId) {
+    var email;
+    var user = firebase.auth().currentUser;
+    email = user.email;
+
+    var db = firebase.firestore();
+    var userRef = db.collection('users').doc(email);
+
+    var eventRef = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection
+    userRef.update({
+        events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
+    });
 }
 
 $(function() {
