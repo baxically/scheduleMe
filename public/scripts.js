@@ -81,13 +81,13 @@ async function userClass() {
     return user_class;
 }
 
-//This function populates and creates a Event object from firebase data
-async function eventClass() {
+// This function populates and creates a Event object from firebase data
+// Currently, eventRef is a string. Will adjust for reference when confirmed by others.
+async function eventClass(eventRef) {
 
-    // var specific_event = tempUser.getUserEvents()[eventIndex];
     var db = firebase.firestore();
 
-    eventRef = db.collection("test").doc("#sample");
+    eventRef = db.collection("test").doc(eventRef);
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
