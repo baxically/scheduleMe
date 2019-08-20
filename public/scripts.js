@@ -175,13 +175,13 @@ function login() {
             var name = user.displayName;
             var email = user.email;
             var avatarURL = user.photoURL;
-            var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
+            //var friendList = ["users/athac007@ucr.edu", "users/bport008@ucr.edu"];
 
             var profile = {
                 profName: name,
                 profEmail: email,
-                profAvatar: avatarURL,
-                profFriends: friendList
+                profAvatar: avatarURL
+                //profFriends: friendList
             };
             
             addUser(profile);
@@ -211,8 +211,8 @@ async function addUser(profile) {
         //GToken: token,
         avatar: profile.profAvatar,
         displayName: profile.profName,
-        email: profile.profEmail,
-        friends: db.doc(profile.profFriends)
+        email: profile.profEmail
+        //friends: db.doc(profile.profFriends[0])
     });
     //debugger;
 }
