@@ -27,46 +27,32 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(title, location, attendees) {
-        this.title = title;
+    constructor(date, emails, event, friend_names, location) {
+        this.date = date;
+        this.emails = emails;
+        this.event = event;
+        this.friend_names = friend_names;
         this.location = location;
-        this.attendees = attendees;
+    }
+
+    getEventDate() {
+        return this.date;
+    }
+
+    getEventEmails() {
+        return this.emails;
     }
 
     getEventTitle() {
-        return this.title;
+        return this.event;
+    }
+
+    getEventFriends() {
+        return this.friend_names;
     }
 
     getEventLocation() {
         return this.location;
-    }
-
-    // getEventDate() {
-    //     return this.date;
-    // }
-
-    // getEventDates() {
-    //     return this.dateArray;
-    // }
-
-    // getEventStart() {
-    //     return this.start;
-    // }
-
-    // getEventStarts() {
-    //     return this.startArray;
-    // }
-
-    // getEventEnd() {
-    //     return this.end;
-    // }
-
-    // getEventEnds() {
-    //     return this.endArray;
-    // }
-
-    getEventAttendees() {
-        return this.attendees;
     }
 
 };
@@ -96,25 +82,25 @@ async function userClass() {
 }
 
 //This function populates and creates a Event object from firebase data
-async function eventClass(eventIndex) {
-    let tempUser = await userClass();
+async function eventClass() {
 
+    // var specific_event = tempUser.getUserEvents()[eventIndex];
+    var db = firebase.firestore();
 
-    var specific_event = tempUser.getUserEvents()[eventIndex];
-
-    eventRef = db.collection("test").doc(specific_event);
+    eventRef = db.collection("test").doc("#sample");
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
-            title: doc.data().title,
-            location: doc.data().location,
-            attendees: doc.data().attendees
+            date: doc.data().date,
+            emails: doc.data().emails,
+            event: doc.data().event,
+            friend_names: doc.data().friend_names,
+            location: doc.data().location
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
 
     
-    var event_class = new userPersonalEvent(dataEventPassIn.title, dataEventPassIn.location, dataEventPassIn.attendees);
-    //debugger;
+    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.event, dataEventPassIn.friend_names, dataEventPassIn.location);
     return event_class;
 }
 
