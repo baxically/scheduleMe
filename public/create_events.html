@@ -17,7 +17,7 @@
                 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
                 
                 </head>
-    <body onload="initialize(); getUserData();"></body>
+    <body onload="initialize(); getProfileData();"></body>
     
     <div class="header">
         <h1>
@@ -43,8 +43,6 @@
     <!-- <label>Pick times you're available here:</label> -->
     When will you be free?<input type="date" id="avail_date"><br>
     <input type="text" name="dates" class="form-control pull-right" />
-    
-    <div class="fakeimg" style="height:400px;"></div>
     
     <p>Who would you like to invite?</p> 
     <!-- later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
