@@ -197,6 +197,33 @@ async function addUser(profile) {
     //debugger;
 }
 
+async function addHangout() {
+    eventId = await document.getElementById('eventKey').value
+    var db = firebase.firestore();
+    if (eventId === "") {
+        alert("There is no event key");
+    }
+    else {
+        eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
+
+        eventRef.get()
+        .then(async (docSnapshot) => {
+            if (docSnapshot.exists) {
+                await addEventReference(eventId);
+                var email;
+                var user = firebase.auth().currentUser;
+                email = user.email;
+                eventRef.update ({
+                    attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
+                });
+                alert("Event has been added!");
+            } else {
+                alert("Event Key not found");
+            }
+        });
+    }
+}
+
 function logout() {
     firebase.auth().signOut().then(function() {
         //setTimeout(() => {homeRedirect();}, 500);
@@ -215,7 +242,7 @@ async function getProfileData() {
             document.getElementById("username").innerHTML = name;
             document.getElementById("profilepic").src = avatar;
             listEvents(user1);
-            listFriends(user1);
+            // listFriends(user1);
         } else {
             console.error('user state is broken');
         }
@@ -230,28 +257,28 @@ function openPrompt() {
     }
 }
 
-async function listFriends(user) {
-    var staticFriends = await user.getUserFriends();
+// async function listFriends(user) {
+//     var staticFriends = await user.getUserFriends();
     
-    var person = "";
-    if(staticFriends != null)
-    {
-        for(var i = 0; i < staticFriends.length; i++)
-        {
-            var name = await staticFriends[i].get().then((doc) => {
-                return doc.data().displayName;
-            });
-            person += "<li>" + name + "</li> <br>";
-        }
+//     var person = "";
+//     if(staticFriends != null)
+//     {
+//         for(var i = 0; i < staticFriends.length; i++)
+//         {
+//             var name = await staticFriends[i].get().then((doc) => {
+//                 return doc.data().displayName;
+//             });
+//             person += "<li>" + name + "</li> <br>";
+//         }
         
-        document.getElementById("fList").innerHTML = person;
-    }
-    else
-    {
-        person += "You have no friends";
-        document.getElementById("fList").innerHTML = person;
-    }
-}
+//         document.getElementById("fList").innerHTML = person;
+//     }
+//     else
+//     {
+//         person += "You have no friends";
+//         document.getElementById("fList").innerHTML = person;
+//     }
+// }
 
 async function listEvents(user) {
     var staticEvents = await user.getUserEvents();
@@ -277,39 +304,39 @@ async function listEvents(user) {
     }
 }
 
-async function addFriends() {
-    var db = firebase.firestore();
-    var fEmail = document.getElementById("friendsEmail").value;
-    var docRef = db.collection('users').doc(fEmail);
+// async function addFriends() {
+//     var db = firebase.firestore();
+//     var fEmail = document.getElementById("friendsEmail").value;
+//     var docRef = db.collection('users').doc(fEmail);
     
-    docRef.get().then(async (doc) => {
-        if(doc.exists) {
-            var friendRef = 'users/' + fEmail;
+//     docRef.get().then(async (doc) => {
+//         if(doc.exists) {
+//             var friendRef = 'users/' + fEmail;
                       
-            let user1 = await userClass();
-            var myEmail = user1.getUserEmail();
-            var myRef = db.collection('users').doc(myEmail);
+//             let user1 = await userClass();
+//             var myEmail = user1.getUserEmail();
+//             var myRef = db.collection('users').doc(myEmail);
             
-            myRef.update({
-            friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
-            });
-        }
-        else
-        {
-            alert("This user doesn't exist!");
-        }
-    });
-}
+//             myRef.update({
+//             friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
+//             });
+//         }
+//         else
+//         {
+//             alert("This user doesn't exist!");
+//         }
+//     });
+// }
 
 async function addEvent() {
     var eventId = await createEvent();
     await addEventReference(eventId);
-    setTimeout(function(){location.href = 'profile.html';} , 1000)
+    //setTimeout(function(){location.href = 'profile.html';} , 1000)
 }
 
 async function createEvent() {
     var db = firebase.firestore();
-    var email_ref = "users/" + document.getElementById("friend_email").value;
+    //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
     //This will be returned to be used in the addEventReference function
     await db.collection("test").add({
@@ -317,14 +344,16 @@ async function createEvent() {
         event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value,
-        friend_name: document.getElementById("friend_name").value,
-        email: db.doc(email_ref)
+        //friend_name: document.getElementById("friend_name").value,
+        //email: db.doc(email_ref)
     })
     .then((docRef) => {
         docId = docRef.id;
+        document.getElementById("eKey").innerHTML = docId;
         return docId;
     })
     //debugger;
+    document.getElementById("eKey").innerHTML = docId;
     return docId;
 }
 
@@ -342,7 +371,7 @@ async function addEventReference(eventId) {
     });
 }
 
-$(function() {
+$(function() { // Chrystal's date picker: once apply is pressed, start and end date are appended to a list of availble dates
   $('input[name="dates"]').daterangepicker({
         timePicker: true,
         startDate: moment(),
@@ -350,52 +379,72 @@ $(function() {
         locale: {
             format: 'M/DD hh:mm A'
         }
-    },
+    }, 
     function(start, end, label) {
+        // save current user's email (string)
+        var userEmail;
+        var user = firebase.auth().currentUser;
+        userEmail = user.email;
+        // var userEmail = 'sample@email.com'; (used for testing)
+        //add to database
         var db = firebase.firestore();
-        var docId = '#sample';
-        var userEmail = 'samples@gmail.com';
-        db.collection('test').doc(docId)
-        .collection('userInputs').doc(userEmail).get().then((doc) => {
-            if(doc.exists) {
-                //if email exists updates so more times add
-                db.collection('test').doc(docId)
+        docRef = db.collection('test').doc('#sample')   //Will need to change from 'test/' when we change the collection
+            .collection('userInputs').doc(userEmail);
+        docRef.get().then(async (doc) => {
+            // if document exists, update
+            if (doc.exists) {
+                db.collection('test').doc('#sample')
                 .collection('userInputs').doc(userEmail).update({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
                     endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
-                })
+                })    
             }
+            // if document doesn't exist, create new document and add fields
             else {
-                //if email doesn't exist yet it goes through this first
-                db.collection('test').doc(docId)
+                db.collection('test').doc('#sample')
                 .collection('userInputs').doc(userEmail).set({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
                     endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
                     theyHaveInput: true
                 })
             }
-
-        })
-        // console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-        // ' to ' + end.format('M/DD hh:mm A'));
-    })
+        // db.collection('test').doc(docId)
+        // .collection('userInputs').doc(userEmail).get().
+        })  .catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+        //list date
+        var datesDiv = $(".dates_list");
+        $(datesDiv).append('<li' + ' id=test>' +start.format('YYYY-MM-DD hh:mm A')+' to '+end.format('YYYY-MM-DD hh:mm A')+'</li>');
+    });
 });
 
-$(document).ready(function() {
-                  var max_fields      = 10; //maximum input boxes allowed
-                  var wrapper           = $(".input_fields_wrap"); //Fields wrapper
-                  var add_button      = $(".add_field_button"); //Add button ID
-                  
-                  var x = 1; //initlal text box count
-                  $(add_button).click(function(e){ //on add input button click
-                                      e.preventDefault();
-                                      if(x < max_fields){ //max input box allowed
-                                      x++; //text box increment
-                                      $(wrapper).append('<div> Name:<input type="text" id="friend_name" name="mytext[]"/> Email:<input type="text" id="friend_email"/> <a href="#" class="remove_field">Remove</a></div>'); //add input box
-                                      }
-                                      });
-                  
-                  $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
-                                e.preventDefault(); $(this).parent('div').remove(); x--;
-                                })
-                  }); 
+//     })
+//     // console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+//     // ' to ' + end.format('M/DD hh:mm A'));
+// }
+
+
+// $(document).ready(function() {
+//     var max_fields      = 10; //maximum input boxes allowed
+//     var wrapper           = $(".input_fields_wrap"); //Fields wrapper
+//     var add_button      = $(".add_field_button"); //Add button ID
+    
+//     var x = 1; //initlal text box count
+//     $(add_button).click(function(e){ //on add input button click
+//                         e.preventDefault();
+//                         if(x < max_fields){ //max input box allowed
+//                         x++; //text box increment
+//                         $(wrapper).append('<div> Name:<input type="text" id="friend_name" name="mytext[]"/> Email:<input type="text" id="friend_email"/> <a href="#" class="remove_field">Remove</a></div>'); //add input box
+//                         }
+//                         });
+    
+//     $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+//                   e.preventDefault(); $(this).parent('div').remove(); x--;
+//                   })
+//     }); 
+
+
+function showKey() {
+    document.getElementById("eKeyPrompt").innerHTML = "<p>Share the following event key with the friends you want to invite!</p>";
+}
