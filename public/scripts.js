@@ -197,6 +197,18 @@ async function addUser(profile) {
     //debugger;
 }
 
+async function addHangout() {
+    var db = firebase.firestore();
+    var eventId = document.getElementById("addEventKey").value;
+    addEventReference(eventId);
+
+    var currUser = userClass();
+
+    db.collections("test").doc(eventId).update({
+        attendees: firebase.firestore.FieldValue.arrayUnion(currUser.getUserEmail)
+    });
+}
+
 function logout() {
     firebase.auth().signOut().then(function() {
         //setTimeout(() => {homeRedirect();}, 500);
@@ -277,29 +289,29 @@ async function listEvents(user) {
     }
 }
 
-async function addFriends() {
-    var db = firebase.firestore();
-    var fEmail = document.getElementById("friendsEmail").value;
-    var docRef = db.collection('users').doc(fEmail);
+// async function addFriends() {
+//     var db = firebase.firestore();
+//     var fEmail = document.getElementById("friendsEmail").value;
+//     var docRef = db.collection('users').doc(fEmail);
     
-    docRef.get().then(async (doc) => {
-        if(doc.exists) {
-            var friendRef = 'users/' + fEmail;
+//     docRef.get().then(async (doc) => {
+//         if(doc.exists) {
+//             var friendRef = 'users/' + fEmail;
                       
-            let user1 = await userClass();
-            var myEmail = user1.getUserEmail();
-            var myRef = db.collection('users').doc(myEmail);
+//             let user1 = await userClass();
+//             var myEmail = user1.getUserEmail();
+//             var myRef = db.collection('users').doc(myEmail);
             
-            myRef.update({
-            friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
-            });
-        }
-        else
-        {
-            alert("This user doesn't exist!");
-        }
-    });
-}
+//             myRef.update({
+//             friends: firebase.firestore.FieldValue.arrayUnion(db.doc(friendRef))
+//             });
+//         }
+//         else
+//         {
+//             alert("This user doesn't exist!");
+//         }
+//     });
+// }
 
 async function addEvent() {
     var eventId = await createEvent();
