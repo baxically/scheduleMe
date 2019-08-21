@@ -36,6 +36,8 @@ function compareDates( startA, endA, startB, endB ) {
 		overlapStart = startA;
 		overlapEnd = endA;
 	}
+	return [overlapStart, overlapEnd];
+
 }
 
 module.exports = compareDates;
