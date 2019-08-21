@@ -1,0 +1,29 @@
+[debug] [2019-08-21T17:19:24.672Z] ----------------------------------------------------------------------
+[debug] [2019-08-21T17:19:24.674Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\User\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-08-21T17:19:24.675Z] CLI Version:   7.2.2
+[debug] [2019-08-21T17:19:24.675Z] Platform:      win32
+[debug] [2019-08-21T17:19:24.675Z] Node Version:  v10.15.3
+[debug] [2019-08-21T17:19:24.676Z] Time:          Wed Aug 21 2019 18:19:24 GMT+0100 (British Summer Time)
+[debug] [2019-08-21T17:19:24.676Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-08-21T17:19:24.688Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-08-21T17:19:24.689Z] > authorizing via signed-in user
+[debug] [2019-08-21T17:19:24.689Z] [iam] checking project scheduleme-website for permissions ["firebase.projects.get"]
+[debug] [2019-08-21T17:19:24.691Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-08-21T17:19:24.691Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-08-21T17:19:24.822Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-21T17:19:24.833Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/scheduleme-website:testIamPermissions  
+
+[debug] [2019-08-21T17:19:25.496Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-21T17:19:25.500Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/scheduleme-website  
+ 
+[debug] [2019-08-21T17:19:25.678Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\User\Documents\GitHub\scheduleMe'...
+[info] 
+[debug] [2019-08-21T17:19:25.693Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/scheduleme-website/webApps/-/config  
+ 
+[debug] [2019-08-21T17:19:25.955Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000

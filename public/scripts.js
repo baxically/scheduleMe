@@ -209,6 +209,7 @@ async function addHangout() {
         eventRef.get()
         .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
+                /* Put back when done testing modal */
                 await addEventReference(eventId);
                 var email;
                 var user = firebase.auth().currentUser;
@@ -216,9 +217,25 @@ async function addHangout() {
                 eventRef.update ({
                     attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
                 });
-                alert("Event has been added!");
-                
 
+                // Get the modal for attendee to input time
+                var modal = document.getElementById("attendeeTimeInput");
+                modal.style.display = "block";
+
+                // Get the <span> element that closes the modal
+                var span = document.getElementsByClassName("close")[0];
+
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function() {
+                    modal.style.display = "none";
+                }
+
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
             } else {
                 alert("Event Key not found");
             }
@@ -365,7 +382,7 @@ async function addEventReference(eventId) {
     var db = firebase.firestore();
     var userRef = db.collection('users').doc(email);
 
-    var eventRef = 'test/' + eventId;  //Will need to change from 'test/' when we change the collection
+    var eventRef = "Kevin's_Event_Test/" + eventId;  //Will need to change from 'test/' when we change the collection
     userRef.update({
         events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
     });
