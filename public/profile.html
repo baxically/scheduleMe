@@ -120,7 +120,11 @@
                                 <!-- Write the name of the location:<input type="text" id="location_name"> 
                                 <br><br> -->
                                 <!-- <label>Pick times you're available here:</label> -->
-                                When will you be free?<input type="date" id="avail_date"><br>
+
+                                <!-- <input type="date" id="avail_date"><br> -->
+
+                                When will you be free?
+                                
                                 <input type="text" name="datetimes" />
 
                                 <script>
@@ -130,7 +134,7 @@
                                         startDate: moment().startOf('hour'),
                                         endDate: moment().startOf('hour').add(32, 'hour'),
                                         locale: {
-                                        format: 'M/DD hh:mm A'
+                                            format: 'M/DD hh:mm A'
                                         }
                                     });
                                 });
@@ -148,8 +152,6 @@
                                     </div>-->
                             
                                     <!-- <button onclick="addEvent()">Create Event</button> -->
-
-                                </div>
                                 
                                 <p id="demo2"></p>
                       </div>
