@@ -198,15 +198,30 @@ async function addUser(profile) {
 }
 
 async function addHangout() {
+    eventId = await document.getElementById('eventKey').value
     var db = firebase.firestore();
-    var eventId = document.getElementById("addEventKey").value;
-    addEventReference(eventId);
+    if (eventId === "") {
+        alert("There is no event key");
+    }
+    else {
+        eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
 
-    var currUser = userClass();
-
-    db.collections("test").doc(eventId).update({
-        attendees: firebase.firestore.FieldValue.arrayUnion(currUser.getUserEmail)
-    });
+        eventRef.get()
+        .then(async (docSnapshot) => {
+            if (docSnapshot.exists) {
+                await addEventReference(eventId);
+                var email;
+                var user = firebase.auth().currentUser;
+                email = user.email;
+                eventRef.update ({
+                    attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
+                });
+                alert("Event has been added!");
+            } else {
+                alert("Event Key not found");
+            }
+        });
+    }
 }
 
 function logout() {
@@ -227,7 +242,7 @@ async function getProfileData() {
             document.getElementById("username").innerHTML = name;
             document.getElementById("profilepic").src = avatar;
             listEvents(user1);
-            listFriends(user1);
+            // listFriends(user1);
         } else {
             console.error('user state is broken');
         }
@@ -242,28 +257,28 @@ function openPrompt() {
     }
 }
 
-async function listFriends(user) {
-    var staticFriends = await user.getUserFriends();
+// async function listFriends(user) {
+//     var staticFriends = await user.getUserFriends();
     
-    var person = "";
-    if(staticFriends != null)
-    {
-        for(var i = 0; i < staticFriends.length; i++)
-        {
-            var name = await staticFriends[i].get().then((doc) => {
-                return doc.data().displayName;
-            });
-            person += "<li>" + name + "</li> <br>";
-        }
+//     var person = "";
+//     if(staticFriends != null)
+//     {
+//         for(var i = 0; i < staticFriends.length; i++)
+//         {
+//             var name = await staticFriends[i].get().then((doc) => {
+//                 return doc.data().displayName;
+//             });
+//             person += "<li>" + name + "</li> <br>";
+//         }
         
-        document.getElementById("fList").innerHTML = person;
-    }
-    else
-    {
-        person += "You have no friends";
-        document.getElementById("fList").innerHTML = person;
-    }
-}
+//         document.getElementById("fList").innerHTML = person;
+//     }
+//     else
+//     {
+//         person += "You have no friends";
+//         document.getElementById("fList").innerHTML = person;
+//     }
+// }
 
 async function listEvents(user) {
     var staticEvents = await user.getUserEvents();
