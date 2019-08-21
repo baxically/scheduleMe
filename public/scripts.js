@@ -197,6 +197,35 @@ async function addUser(profile) {
     //debugger;
 }
 
+async function addHangout() {
+    eventId = await document.getElementById('eventKey').value
+    var db = firebase.firestore();
+    if (eventId === "") {
+        alert("There is no event key");
+    }
+    else {
+        eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
+
+        eventRef.get()
+        .then(async (docSnapshot) => {
+            if (docSnapshot.exists) {
+                await addEventReference(eventId);
+                var email;
+                var user = firebase.auth().currentUser;
+                email = user.email;
+                eventRef.update ({
+                    attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
+                });
+                alert("Event has been added!");
+                
+
+            } else {
+                alert("Event Key not found");
+            }
+        });
+    }
+}
+
 function logout() {
     firebase.auth().signOut().then(function() {
         //setTimeout(() => {homeRedirect();}, 500);
