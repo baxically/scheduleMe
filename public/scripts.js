@@ -304,12 +304,12 @@ async function addFriends() {
 async function addEvent() {
     var eventId = await createEvent();
     await addEventReference(eventId);
-    setTimeout(function(){location.href = 'profile.html';} , 1000)
+    //setTimeout(function(){location.href = 'profile.html';} , 1000)
 }
 
 async function createEvent() {
     var db = firebase.firestore();
-    var email_ref = "users/" + document.getElementById("friend_email").value;
+    //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
     //This will be returned to be used in the addEventReference function
     await db.collection("test").add({
@@ -317,14 +317,16 @@ async function createEvent() {
         event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value,
-        friend_name: document.getElementById("friend_name").value,
-        email: db.doc(email_ref)
+        //friend_name: document.getElementById("friend_name").value,
+        //email: db.doc(email_ref)
     })
     .then((docRef) => {
         docId = docRef.id;
+        document.getElementById("eKey").innerHTML = docId;
         return docId;
     })
     //debugger;
+    document.getElementById("eKey").innerHTML = docId;
     return docId;
 }
 
@@ -399,3 +401,7 @@ $(document).ready(function() {
                                 e.preventDefault(); $(this).parent('div').remove(); x--;
                                 })
                   }); 
+
+function showKey() {
+    document.getElementById("eKeyPrompt").innerHTML = "<p>Share the following event key with the friends you want to invite!</p>";
+}
