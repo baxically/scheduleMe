@@ -343,7 +343,7 @@ async function createEvent() {
         // email: document.getElementById("friend_email").value,
         event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
-        date: document.getElementById("avail_date").value,
+        date: document.getElementById("avail_date").value
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
     })
