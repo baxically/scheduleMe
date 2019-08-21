@@ -352,7 +352,31 @@ $(function() {
         }
     },
     function(start, end, label) {
-        console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-        ' to ' + end.format('M/DD hh:mm A'));
-    });
+        var db = firebase.firestore();
+        var docId = '#sample';
+        var userEmail = 'samples@gmail.com';
+        db.collection('test').doc(docId)
+        .collection('userInputs').doc(userEmail).get().then((doc) => {
+            if(doc.exists) {
+                //if email exists updates so more times add
+                db.collection('test').doc(docId)
+                .collection('userInputs').doc(userEmail).update({
+                    startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
+                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
+                })
+            }
+            else {
+                //if email doesn't exist yet it goes through this first
+                db.collection('test').doc(docId)
+                .collection('userInputs').doc(userEmail).set({
+                    startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
+                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
+                    theyHaveInput: true
+                })
+            }
+
+        })
+        // console.log("New date range selected: " + start.format('M/DD hh:mm A') +
+        // ' to ' + end.format('M/DD hh:mm A'));
+    })
 });
