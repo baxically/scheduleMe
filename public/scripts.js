@@ -419,7 +419,6 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
     });
 });
 
-<<<<<<< HEAD
 //     })
 //     // console.log("New date range selected: " + start.format('M/DD hh:mm A') +
 //     // ' to ' + end.format('M/DD hh:mm A'));
@@ -445,27 +444,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
 //                   })
 //     }); 
 
-=======
-$(document).ready(function() {
-                  var max_fields      = 10; //maximum input boxes allowed
-                  var wrapper           = $(".input_fields_wrap"); //Fields wrapper
-                  var add_button      = $(".add_field_button"); //Add button ID
-                  
-                  var x = 1; //initlal text box count
-                  $(add_button).click(function(e){ //on add input button click
-                                      e.preventDefault();
-                                      if(x < max_fields){ //max input box allowed
-                                      x++; //text box increment
-                                      $(wrapper).append('<div> Name:<input type="text" id="friend_name" name="mytext[]"/> Email:<input type="text" id="friend_email"/> <a href="#" class="remove_field">Remove</a></div>'); //add input box
-                                      }
-                                      });
-                  
-                  $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
-                                e.preventDefault(); $(this).parent('div').remove(); x--;
-                                })
-                  }); 
 
 function showKey() {
     document.getElementById("eKeyPrompt").innerHTML = "<p>Share the following event key with the friends you want to invite!</p>";
 }
->>>>>>> origin/master
