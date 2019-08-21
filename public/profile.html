@@ -36,17 +36,25 @@
                 <img id="profilepic" src="profilepic" width=300px></img>
             </div>
             <div class="main">
-                <h2>MY HANGOUTS</h2>
-                <h5>Things I'm going to...</h5>
-                <p id="eList"></p>
-                <br>
-                <p id="demo"></p>
+                <div class="column">
+                    <h2>MY HANGOUTS</h2>
+                    <p>Things I'm going to...</p>
+                    <p id="eList"></p>
+                    <br>
+                    <p id="demo"></p>
+                
+                    <h2>THINGS I'VE BEEN INVITED TO</h2>
+                    <p>Please enter an event key...</p>
+                    Event Key:<input type="text" id="eventKey"></input>
+                    <button type="button" id="enterEvent" onclick="addHangout()">Add Event</button>
+                    <p id="invited"></p>
+                </div>
     
-                <h2>MY FRIENDS</h2>
+                <!--<h2>MY FRIENDS</h2>
                 Friend's Email:
                 <input text="text" id="friendsEmail"></input>
                 <button type="button" id="addFriendsBtn" onclick="addFriends(); setTimeout(() => {window.location.reload();}, 1000)">Add Friend</button>
-                <p id="fList"></p>
+                <p id="fList"></p>-->
             </div>
         </div>
         

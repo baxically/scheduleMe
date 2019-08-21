@@ -118,3 +118,10 @@ body {
     font-size: 45px;
     letter-spacing: 10px;
 }
+
+.column {
+    position: relative;
+    float: left;
+    width: 50%;
+    padding: 5px;
+}
