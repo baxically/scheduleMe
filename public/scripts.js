@@ -359,7 +359,7 @@ async function createEvent() {
     //This will be returned to be used in the addEventReference function
     await db.collection("test").add({
         // email: document.getElementById("friend_email").value,
-        event: document.getElementById("event_name").value,
+        event: $("#event_name").val(),
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value
         //friend_name: document.getElementById("friend_name").value,
@@ -414,7 +414,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
                 db.collection('test').doc('#sample')
                 .collection('userInputs').doc(userEmail).update({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
-                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
+                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A'))
                 })    
             }
             // if document doesn't exist, create new document and add fields
