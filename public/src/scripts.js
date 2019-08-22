@@ -1,12 +1,9 @@
-//import User from './user.js';
-//ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
-
 class User {
     constructor(email, username, avatar, friends, events) {
         this.email = email;
         this.displayName = username;
         this.avatar = avatar;
-        this.friends = friends;
+        // this.friends = friends;
         this.events = events;
     }
 
@@ -22,9 +19,9 @@ class User {
         return this.avatar;
     }
 
-    getUserFriends() {
-        return this.friends;
-    }
+    // getUserFriends() {
+    //     return this.friends;
+    // }
 
     getUserEvents() {
         return this.events;
@@ -78,12 +75,12 @@ async function userClass() {
             email: email,
             displayName: doc.data().displayName,
             avatar: doc.data().avatar,
-            friends: doc.data().friends,
+            // friends: doc.data().friends,
             events: doc.data().events
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
     
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends, dataPassIn.events);
+    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, /*dataPassIn.friends,*/ dataPassIn.events);
     //debugger;
     return user_class;
 }
@@ -359,7 +356,8 @@ async function createEvent() {
     //This will be returned to be used in the addEventReference function
     await db.collection("test").add({
         // email: document.getElementById("friend_email").value,
-        event: document.getElementById("event_name").value,
+        // event: $("#event_name").val(),
+	event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value
         //friend_name: document.getElementById("friend_name").value,
