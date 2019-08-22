@@ -12,6 +12,7 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -57,7 +58,105 @@
                     <p>Please enter an event key...</p>
                     Event Key:<input type="text" id="eventKey"></input>
                     <button type="button" id="enterEvent" onclick="addHangout()">Add Event</button>
-                    <p id="invited"></p>
+                    </head>
+                    <body>
+                
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <style>
+                        body {font-family: Arial, Helvetica, sans-serif;}
+
+                        /* The Modal (background) */
+                        .modal {
+                        display: none; /* Hidden by default */
+                        position: fixed; /* Stay in place */
+                        z-index: 1; /* Sit on top */
+                        padding-top: 100px; /* Location of the box */
+                        left: 0;
+                        top: 0;
+                        width: 100%; /* Full width */
+                        height: 100%; /* Full height */
+                        overflow: auto; /* Enable scroll if needed */
+                        background-color: rgb(0,0,0); /* Fallback color */
+                        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                        }
+
+                        /* Modal Content */
+                        .modal-content {
+                        background-color: #fefefe;
+                        margin: auto;
+                        padding: 20px;
+                        border: 1px solid #888;
+                        width: 80%;
+                        }
+
+                        /* The Close Button */
+                        .close {
+                        color: #aaaaaa;
+                        float: right;
+                        font-size: 28px;
+                        font-weight: bold;
+                        }
+
+                        .close:hover,
+                        .close:focus {
+                        color: #000;
+                        text-decoration: none;
+                        cursor: pointer;
+                        }
+                        </style>        
+
+                    <!-- The Modal -->
+                    <div id="attendeeTimeInput" class="modal">
+                
+                      <!-- Modal content -->
+                      <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h1>Event Successfully Added!</h1>
+                        <!-- <p>When will you be free?<input type="date" id="avail_date"><br>
+                            <input type="text" name="dates" class="form-control pull-right" /> <br><br></p>
+                            <p id="invited"></p> -->
+
+                                <p id="demo"></p>
+                                <!-- Write the name of the location:<input type="text" id="location_name"> 
+                                <br><br> -->
+                                <!-- <label>Pick times you're available here:</label> -->
+
+                                <!-- <input type="date" id="avail_date"><br> -->
+
+                                When will you be free?
+                                
+                                <input type="text" name="datetimes" />
+
+                                <script>
+                                $(function() {
+                                    $('input[name="datetimes"]').daterangepicker({
+                                        timePicker: true,
+                                        startDate: moment().startOf('hour'),
+                                        endDate: moment().startOf('hour').add(32, 'hour'),
+                                        locale: {
+                                            format: 'M/DD hh:mm A'
+                                        }
+                                    });
+                                });
+                                </script>
+
+                                <!-- <p>Who would you like to invite?</p> 
+                                later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
+                                    <!--<div class="input_fields_wrap">
+                                        <div></div>
+                                            Name:<input type="text" id="friend_name">
+                                            Email:<input type="text" id="friend_email">
+                                        </div>
+                                        <br>
+                                        <button class="add_field_button">Add More Friends</button>
+                                    </div>-->
+                            
+                                    <!-- <button onclick="addEvent()">Create Event</button> -->
+                                
+                                <p id="demo2"></p>
+                      </div>
+                
+                    </div>
                 </div>
     
                 <!--<h2>MY FRIENDS</h2>
