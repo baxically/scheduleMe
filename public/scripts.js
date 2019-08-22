@@ -204,41 +204,49 @@ async function addHangout() {
         alert("There is no event key");
     }
     else {
+        queryRef = db.collection('users').where("events", "array-contains", {events: "Kevin's_Event_Testing/" + eventId})
+        // if (queryRef.collectionGroup()) {
+        //     console.log(db.collection('users').where("events", "array-contains", {reference: "Kevin's_Event_Testing/" + eventId}))
+        //     alert("This Event key has already been added");
+        // }
+        //else {
+        console.log(queryRef);    
         eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
 
-        eventRef.get()
-        .then(async (docSnapshot) => {
-            if (docSnapshot.exists) {
-                await addEventReference(eventId);
-                var email;
-                var user = firebase.auth().currentUser;
-                email = user.email;
-                eventRef.update ({
-                    attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
-                });
+            eventRef.get()
+            .then(async (docSnapshot) => {
+                if (docSnapshot.exists) {
+                    await addEventReference(eventId);
+                    var email;
+                    var user = firebase.auth().currentUser;
+                    email = user.email;
+                    eventRef.update ({
+                        attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
+                    });
 
-                // Get the modal for attendee to input time
-                var modal = document.getElementById("attendeeTimeInput");
-                modal.style.display = "block";
+                    // Get the modal for attendee to input time
+                    var modal = document.getElementById("attendeeTimeInput");
+                    modal.style.display = "block";
 
-                // Get the <span> element that closes the modal
-                var span = document.getElementsByClassName("close")[0];
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName("close")[0];
 
-                // When the user clicks on <span> (x), close the modal
-                span.onclick = function() {
-                    modal.style.display = "none";
-                }
-
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function(event) {
-                    if (event.target == modal) {
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function() {
                         modal.style.display = "none";
                     }
+
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                } else {
+                    alert("Event Key not found");
                 }
-            } else {
-                alert("Event Key not found");
-            }
-        });
+            });
+        //}   
     }
 }
 
