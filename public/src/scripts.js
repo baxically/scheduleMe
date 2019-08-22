@@ -356,7 +356,8 @@ async function createEvent() {
     //This will be returned to be used in the addEventReference function
     await db.collection("test").add({
         // email: document.getElementById("friend_email").value,
-        event: $("#event_name").val(),
+        // event: $("#event_name").val(),
+	event: document.getElementById("event_name").value,
         location: document.getElementById("location_name").value,
         date: document.getElementById("avail_date").value
         //friend_name: document.getElementById("friend_name").value,
