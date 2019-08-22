@@ -414,7 +414,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
                 db.collection('test').doc('#sample')
                 .collection('userInputs').doc(userEmail).update({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
-                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
+                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A'))
                 })    
             }
             // if document doesn't exist, create new document and add fields
