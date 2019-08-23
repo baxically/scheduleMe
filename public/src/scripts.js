@@ -300,7 +300,7 @@ function openPrompt() {
 async function listEvents(user) {
     var staticEvents = await user.getUserEvents();
     
-    var events = "";
+    //var events = "";
     
     if(staticEvents != null)
     {
@@ -309,15 +309,12 @@ async function listEvents(user) {
             var eventName = await staticEvents[i].get().then((doc) => {
                 return doc.data().event;
             });
-            events += "<li>" + eventName + "</li> <br>";
+            $("#eList").append("<li>" + eventName + "</li> <br>");
         }
-        
-        document.getElementById("eList").innerHTML = events;
     }
     else
     {
-        events += "You have no events";
-        document.getElementById("eList").innerHTML = events;
+        $("#eList").html("You have no events");
     }
 }
 
