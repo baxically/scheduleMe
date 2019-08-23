@@ -195,7 +195,7 @@ async function addUser(profile) {
 }
 
 async function addHangout() {
-    eventId = await document.getElementById('eventKey').value
+    eventId = await $('#eventKey').val();
     var db = firebase.firestore();
     if (eventId === "") {
         alert("There is no event key");
@@ -254,8 +254,8 @@ async function getProfileData() {
             var name = await user1.getUserName();
             var avatar = await user1.getUserAvatar();
             //debugger;
-            document.getElementById("username").innerHTML = name;
-            document.getElementById("profilepic").src = avatar;
+            $("#username").html(name);
+            $("#profilepic").attr("src", avatar);
             listEvents(user1);
             // listFriends(user1);
         } else {
@@ -264,11 +264,11 @@ async function getProfileData() {
     });
 }
 
+//I don't think we're using this popup prompt anymore so we should consider taking it out 
 function openPrompt() {
     var event = prompt("Please enter the name of your event", "");
     if (event != null) {
-        document.getElementById("demo").innerHTML =
-        "When are you free to host '" + event + "'?";
+        $("#demo").html("When are you free to host '" + event + "'?");
     }
 }
 
@@ -295,6 +295,8 @@ function openPrompt() {
 //     }
 // }
 
+
+//This function doesn't work anymore??
 async function listEvents(user) {
     var staticEvents = await user.getUserEvents();
     
@@ -357,19 +359,19 @@ async function createEvent() {
     await db.collection("test").add({
         // email: document.getElementById("friend_email").value,
         // event: $("#event_name").val(),
-	event: document.getElementById("event_name").value,
-        location: document.getElementById("location_name").value,
-        date: document.getElementById("avail_date").value
+	event: $("#event_name").val(),
+        location: $("#location_name").val(),
+        date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
     })
     .then((docRef) => {
         docId = docRef.id;
-        document.getElementById("eKey").innerHTML = docId;
+        $("#eKey").html(docId);
         return docId;
     })
     //debugger;
-    document.getElementById("eKey").innerHTML = docId;
+    $("#eKey").html(docId);
     return docId;
 }
 
@@ -547,5 +549,5 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
 
 
 function showKey() {
-    document.getElementById("eKeyPrompt").innerHTML = "<p>Share the following event key with the friends you want to invite!</p>";
+    $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
 }
