@@ -1,5 +1,5 @@
 class User {
-    constructor(email, username, avatar, friends, events) {
+    constructor(email, username, avatar, events) {
         this.email = email;
         this.displayName = username;
         this.avatar = avatar;
@@ -29,11 +29,11 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(date, emails, event, friend_names, location) {
+    constructor(date, emails, event, location) {
         this.date = date;
         this.emails = emails;
         this.event = event;
-        this.friend_names = friend_names;
+        //this.friend_names = friend_names;
         this.location = location;
     }
 
@@ -91,13 +91,13 @@ async function eventClass(eventRef) {
 
     var db = firebase.firestore();
 
-    eventRef = db.collection("test").doc(eventRef);
+    eventRef = db.collection("hangouts").doc(eventRef);
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
             date: doc.data().date,
             emails: doc.data().emails,
-            event: doc.data().event,
+            hangoutName: doc.data().hangoutName,
             friend_names: doc.data().friend_names,
             location: doc.data().location
         }
@@ -201,7 +201,7 @@ async function addHangout() {
         alert("There is no event key");
     }
     else {
-        eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
+        eventRef = db.collection("hangouts").doc(eventId)
 
         eventRef.get()
         .then(async (docSnapshot) => {
@@ -298,6 +298,7 @@ function openPrompt() {
 
 //This function doesn't work anymore??
 async function listEvents(user) {
+    debugger;
     var staticEvents = await user.getUserEvents();
     
     //var events = "";
@@ -307,7 +308,7 @@ async function listEvents(user) {
         for(var i = 0; i < staticEvents.length; i++)
         {
             var eventName = await staticEvents[i].get().then((doc) => {
-                return doc.data().event;
+                return doc.data().hangoutName;
             });
             $("#eList").append("<li>" + eventName + "</li> <br>");
         }
@@ -353,10 +354,10 @@ async function createEvent() {
     //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
     //This will be returned to be used in the addEventReference function
-    await db.collection("test").add({
+    await db.collection("hangouts").add({
         // email: document.getElementById("friend_email").value,
         // event: $("#event_name").val(),
-	event: $("#event_name").val(),
+        hangoutName: $("#event_name").val(),
         location: $("#location_name").val(),
         date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
@@ -380,7 +381,7 @@ async function addEventReference(eventId) {
     var db = firebase.firestore();
     var userRef = db.collection('users').doc(email);
 
-    var eventRef = "Kevin's_Event_Test/" + eventId;  //Will need to change from 'test/' when we change the collection
+    var eventRef = "hangouts/" + eventId;  //Will need to change from 'test/' when we change the collection
     userRef.update({
         events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
     });
