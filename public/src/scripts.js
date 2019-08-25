@@ -292,6 +292,18 @@ async function getCreateEventPageData() {
     });
 }
 
+async function getBlogPageData() {
+    firebase.auth().onAuthStateChanged(async function(user) {
+        if (user) {
+            let user1 = await userClass();
+            var name = await user1.getUserName();
+            $("#username").html(name);
+        } else {
+            console.error('user state is broken');
+        }
+    });
+}
+
 //I don't think we're using this popup prompt anymore so we should consider taking it out 
 function openPrompt() {
     var event = prompt("Please enter the name of your event", "");
