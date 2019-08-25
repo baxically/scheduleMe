@@ -23,7 +23,7 @@ class User {
     //     return this.friends;
     // }
 
-    getUserEvents() {
+    async getUserEvents() {
         return this.events;
     }
 };
@@ -206,36 +206,53 @@ async function addHangout() {
         eventRef.get()
         .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
-                await addEventReference(eventId);
-                var email;
-                var user = firebase.auth().currentUser;
-                email = user.email;
-                eventRef.update ({
-                    attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
-                });
-
-                // Get the modal for attendee to input time
-                var modal = document.getElementById("attendeeTimeInput");
-                modal.style.display = "block";
-
-                // Get the <span> element that closes the modal
-                var span = document.getElementsByClassName("close")[0];
-
-                // When the user clicks on <span> (x), close the modal
-                span.onclick = function() {
-                    modal.style.display = "none";
-                }
-
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function(event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
+                let currUser = await userClass();
+                // console.log("Big Check");
+                let eventCheck = await currUser.getUserEvents();
+                let i;
+                let eventFound = false;
+                // console.log(eventCheck);
+                for (i of eventCheck) {
+                    if (i.id === eventId) {
+                        eventFound = true;
                     }
                 }
-            } else {
-                alert("Event Key not found");
-            }
-        });
+                if (eventFound) {
+                    alert("Event already added");
+                }
+                    else {
+                        await addEventReference(eventId);
+                        var email;
+                        var user = firebase.auth().currentUser;
+                        email = user.email;
+                        eventRef.update ({
+                            attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
+                        });
+    
+                        // Get the modal for attendee to input time
+                        var modal = document.getElementById("attendeeTimeInput");
+                        modal.style.display = "block";
+    
+                        // Get the <span> element that closes the modal
+                        var span = document.getElementsByClassName("close")[0];
+    
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function() {
+                            modal.style.display = "none";
+                        }
+    
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+                    }
+                } else {
+                    alert("Event Key not found");
+                }
+            });
+        //}   
     }
 }
 
