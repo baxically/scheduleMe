@@ -507,6 +507,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
     }, 
     function(start, end, label) {
         var hangoutID = sessionStorage.getItem('docId');
+        
         // save current user's email (string)
         var userEmail;
         var user = firebase.auth().currentUser;
