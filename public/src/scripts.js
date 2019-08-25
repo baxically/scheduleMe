@@ -118,7 +118,7 @@ function homeRedirect() {
 
 
 function create_eventsRedirect() {
-    location.href = 'create_events.html';
+    location.href = 'create_hangouts.html';
 }
 
 function settingsRedirect() {
