@@ -227,7 +227,7 @@ async function addUser(profile) {
 
 async function addHangout() {
     eventId = await $('#eventKey').val();
-    sessionStorage.setItem('docID', eventId);
+    sessionStorage.setItem('docId', eventId);
     var db = firebase.firestore();
     if (eventId === "") {
         alert("There is no event key");
@@ -678,7 +678,6 @@ function displayHangoutDetails(hangoutId) {
             $('#date').append('Date: ' + doc.data().date);
             var people = await doc.data().attendees;
             console.log(people);
-            debugger;
             var i = 0;
             for(i; i < people.length; i++) {
                 var person = await people[i].get()
