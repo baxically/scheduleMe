@@ -110,8 +110,8 @@ async function hangoutClass(eventRef) {
 
     var completeArray = [];
 
-    db.collection("hangouts").doc(eventRef).collection("userInputs")
-    .get()
+    eventRef = eventRef.collection("userInputs");
+    await eventRef.get()
     .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {            
             // doc.data() is never undefined for query doc snapshots
@@ -121,7 +121,7 @@ async function hangoutClass(eventRef) {
             }
             let personArray = [];
             for (i = 0; i < dataTimePassIn.startDates.length; i++) {
-                let avail = await new Availability(dataTimePassIn.startDates[i], dataTimePassIn.endDates[i])
+                let avail = new Availability(dataTimePassIn.startDates[i], dataTimePassIn.endDates[i])
                 personArray.push(avail);
             }
             completeArray.push(personArray);
@@ -132,8 +132,8 @@ async function hangoutClass(eventRef) {
         console.log("Error getting documents: ", error);
     });
 
-    var event_class = await new userPersonalEvent(dataEventPassIn.hangoutName, dataEventPassIn.attendees, dataEventPassIn.location, completeArray);
-    return event_class;
+    var hangout_class = await new Hangout(dataEventPassIn.hangoutName, dataEventPassIn.attendees, dataEventPassIn.location, completeArray);
+    return hangout_class;
 }
 
 function initialize() {
