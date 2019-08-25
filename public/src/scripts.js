@@ -228,11 +228,11 @@ async function addHangout() {
                         var email;
                         var user = firebase.auth().currentUser;
                         email = user.email;
-                        eventRef.update ({
+                        await eventRef.update ({
                             attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
                         });
                         
-                        inputTimesRedirect();
+                        inputTimeRedirect();
 
                         // // Get the modal for attendee to input time
                         // var modal = document.getElementById("attendeeTimeInput");
