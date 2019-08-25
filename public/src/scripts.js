@@ -405,6 +405,21 @@ async function addEventReference(eventId) {
     });
 }
 
+class Availability {
+    constructor(startDate, endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    getStartDate() {
+        return this.startDate;
+    }
+
+    getEndDate() {
+        return this.endDate;
+    }
+};
+
 $(function() { // Chrystal's date picker: once apply is pressed, start and end date are appended to a list of availble dates
   $('input[name="dates"]').daterangepicker({
         timePicker: true,
@@ -453,96 +468,60 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
     });
 });
 
-function compareDates( startA, endA, startB, endB ) {
-    // console.log(startA);
-    // console.log(endA);
-    // console.log(startB);
-    // console.log(endB);
-
+function findOverlap( availA, availB ) {
 	var overlapStart;
 	var overlapEnd;
-	if ( startA >= endB )
+	if ( availA.getStartDate() >= availB.getEndDate() )
 	{
-		//return "No overlap.";
-		return;
+		return;//No overlap
 
 	}
-	else if ( startB >= endA )
+	else if ( availB.getStartDate() >= availA.getEndDate() )
 	{
-		//return "No overlap.";
-		return;
+		return;//No overlap
 	}
-	else if ( startA <= startB && endA >= endB )
+	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() >= availB.getEndDate() )
 	{
-		//return "Overlap!!!";
-		overlapStart = startB;
-		overlapEnd = endB;
+		overlapStart = availB;
+		overlapEnd = availB;
 	}
-	else if ( startA <= startB && endA < endB )
+	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < avialB.getEndDate() )
 	{
-		//return "Overlap!!!";
-		overlapStart = startB;
-		overlapEnd = endA;
+		overlapStart = availB;
+		overlapEnd = availA;
 	}
-	else if ( startA >= startB && endB <= endA )
+	else if ( availA.getStartDate() >= availB.getStartDate() && availB.getEndDate() <= availA.getEndDate() )
 	{
-		//return "Overlap!!!";
-		overlapStart = startA;
-		overlapEnd = endB;
+		overlapStart = availA;
+		overlapEnd = availB;
 	}
-	else if ( startA >= startB && endA < endB )
+	else if ( availA.getStartDate() >= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
 	{
-		//return "Overlap!!!";
-		overlapStart = startA;
-		overlapEnd = endA;
+		overlapStart = availA;
+		overlapEnd = availA;
     }
-    // console.log(overlapStart);
-    // console.log(overlapEnd);
 
-    //var options = { year: '2-digit', month: '2-digit', day: 'numeric' };
-
-	//return overlapStart.format('YYYY-MM-DD hh:mm A') + " to " + overlapEnd.format('YYYY-MM-DD hh:mm A');
-    return overlapStart.toLocaleDateString() + " to " + overlapEnd.toLocaleDateString();
+    return new Availability(overlapStart, overlapEnd);
 }
 
-// var arrStartA = [Date("8/18/19"), Date("8/28/19")];
-// var arrEndA = [Date("8/25/19"), Date("8/29/19")];
-// var arrStartB = [Date("8/19/19")];
-// var arrEndB = [Date("8/21/19")];
-// var commonTimes = "";
-// var allCommonTimes = "";
-function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
+function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
-    //alert(arrStartA);
-    var i, j;
-    var commonTimes = "";
-    var allCommonTimes = "";
-    for ( i = 0; i < arrStartA.length; i++)
+    var i, j;//For loop interators
+    var commonTimes = []//Array of common times
+    var overlapRange;//Availability
+    for ( i = 0; i < arrOfAvailA.length; i++)
     {
-        for ( j = 0; j < arrStartB.length; j++ )
+        for ( j = 0; j < arrOfAvailB.length; j++ )
         {
-            commonTimes = compareDates(arrStartA[i], arrEndA[i], arrStartB[j], arrEndB[j]);
-            console.log(commonTimes);
-            if ( typeof commonTimes === 'undefined')
+            overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            if ( typeof overlapRange === 'Availability')
             {
-
-            }
-            else
-            {
-                allCommonTimes = allCommonTimes + commonTimes + '\n';
+                commonTimes.push(overlapRange);
             }
         }
     }
-    console.log(allCommonTimes);
-    alert(allCommonTimes);
-    return allCommonTimes;
+    return commonTimes;
 }
-
-//     })
-//     // console.log("New date range selected: " + start.format('M/DD hh:mm A') +
-//     // ' to ' + end.format('M/DD hh:mm A'));
-// }
-
 
 // $(document).ready(function() {
 //     var max_fields      = 10; //maximum input boxes allowed
