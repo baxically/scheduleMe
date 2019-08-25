@@ -14,7 +14,7 @@ class Availability {
 };
 
 async function findOverlap( availA, availB ) {
-	var overlapStart;
+  	var overlapStart;
     var overlapEnd;
     // console.log(availA.startDate);
     // console.log(availA.endDate);
@@ -71,6 +71,10 @@ async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
             if ( typeof overlapRange === 'object')
             {
                 console.log("hewwo");
+            overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            //console.log(overlapRange);
+            if ( typeof overlapRange === 'Availability')
+            {
                 commonTimes.push(overlapRange);
             }
         }

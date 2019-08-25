@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Blog</title>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+                
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-firestore.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+                
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+                <!-- Latest compiled and minified CSS -->
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+                <!-- jQuery library -->
+                <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+
+                <!-- Latest compiled JavaScript -->
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+                
+                <link rel="stylesheet" type="text/css" href="./profile_style.css"/>
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+                
+                </head>
+    <body onload="initialize(); getBlogPageData(); displayBlogPosts();"></body>
+
+    <div class="container">
+    <div class="header">
+        <div class="caption">
+            <span class="border" id="username"></span>
+        </div>
+        </h1>
+    </div>
+    
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="profile.html">Profile</a>
+        <a href="create_events.html">Create Events</a>
+        <a href="blog.html">Blog</a>
+        <a href="home.html" class="right" onclick="logout()">Sign Out</a>
+    </div>
+
+    <h1 style="text-align: center">Finding Time Made Easy</h1>
+    <p style="text-align: center">Tell us about your successful hangouts!</p>
+
+    <div style="text-align: center">
+        <input type="text" placeholder="Your story" id="userStory"></input>
+        <button type="submit" onclick="blogPostInput()">Submit Story!</button>
+    </div>
+    <br>
+
+    <div class="userStories" style="text-align: center">
+        <h1>Other Users' Stories</h1>    
+            <div style="text-align:center">
+                <p id="blogPost" style="text-align:center">
+                </p>
+            </div>    
+        </div>
+    </div>
+    
+    <div class="footer">
+        <h2></h2>
+    </div>
+    
+    <script src="./src/scripts.js"></script>
+    <script src="./src/config.js"></script>
+    
+    </body>
+</html> 

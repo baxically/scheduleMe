@@ -23,17 +23,17 @@ class User {
     //     return this.friends;
     // }
 
-    getUserEvents() {
+    async getUserEvents() {
         return this.events;
     }
 };
 
 class userPersonalEvent {
-    constructor(date, emails, event, location) {
+    constructor(date, emails, hangout, attendees, location) {
         this.date = date;
         this.emails = emails;
-        this.event = event;
-        //this.friend_names = friend_names;
+        this.hangout = hangout;
+        this.attendees = attendees;
         this.location = location;
     }
 
@@ -46,11 +46,11 @@ class userPersonalEvent {
     }
 
     getEventTitle() {
-        return this.event;
+        return this.hangout;
     }
 
-    getEventFriends() {
-        return this.friend_names;
+    getEventAttendees() {
+        return this.attendees;
     }
 
     getEventLocation() {
@@ -104,7 +104,7 @@ async function eventClass(eventRef) {
     }).catch((err) => {console.error("Error getting documents: ", err)})
 
     
-    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.event, dataEventPassIn.friend_names, dataEventPassIn.location);
+    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.hangoutName, dataEventPassIn.friend_names, dataEventPassIn.location);
     return event_class;
 }
 
@@ -206,36 +206,53 @@ async function addHangout() {
         eventRef.get()
         .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
-                await addEventReference(eventId);
-                var email;
-                var user = firebase.auth().currentUser;
-                email = user.email;
-                eventRef.update ({
-                    attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
-                });
-
-                // Get the modal for attendee to input time
-                var modal = document.getElementById("attendeeTimeInput");
-                modal.style.display = "block";
-
-                // Get the <span> element that closes the modal
-                var span = document.getElementsByClassName("close")[0];
-
-                // When the user clicks on <span> (x), close the modal
-                span.onclick = function() {
-                    modal.style.display = "none";
-                }
-
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function(event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
+                let currUser = await userClass();
+                // console.log("Big Check");
+                let eventCheck = await currUser.getUserEvents();
+                let i;
+                let eventFound = false;
+                // console.log(eventCheck);
+                for (i of eventCheck) {
+                    if (i.id === eventId) {
+                        eventFound = true;
                     }
                 }
-            } else {
-                alert("Event Key not found");
-            }
-        });
+                if (eventFound) {
+                    alert("Event already added");
+                }
+                    else {
+                        await addEventReference(eventId);
+                        var email;
+                        var user = firebase.auth().currentUser;
+                        email = user.email;
+                        eventRef.update ({
+                            attendees: firebase.firestore.FieldValue.arrayUnion(db.doc('users/' + email))
+                        });
+    
+                        // Get the modal for attendee to input time
+                        var modal = document.getElementById("attendeeTimeInput");
+                        modal.style.display = "block";
+    
+                        // Get the <span> element that closes the modal
+                        var span = document.getElementsByClassName("close")[0];
+    
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function() {
+                            modal.style.display = "none";
+                        }
+    
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+                    }
+                } else {
+                    alert("Event Key not found");
+                }
+            });
+        //}   
     }
 }
 
@@ -258,6 +275,29 @@ async function getProfileData() {
             $("#profilepic").attr("src", avatar);
             listEvents(user1);
             // listFriends(user1);
+        } else {
+            console.error('user state is broken');
+        }
+    });
+}
+async function getCreateEventPageData() {
+    firebase.auth().onAuthStateChanged(async function(user) {
+        if (user) {
+            let user1 = await userClass();
+            var name = await user1.getUserName();
+            $("#username").html(name);
+        } else {
+            console.error('user state is broken');
+        }
+    });
+}
+
+async function getBlogPageData() {
+    firebase.auth().onAuthStateChanged(async function(user) {
+        if (user) {
+            let user1 = await userClass();
+            var name = await user1.getUserName();
+            $("#username").html(name);
         } else {
             console.error('user state is broken');
         }
@@ -362,6 +402,7 @@ async function createEvent() {
         date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
+        // Get the modal for attendee to input time
     })
     .then((docRef) => {
         docId = docRef.id;
@@ -490,6 +531,7 @@ async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
     var i, j;//For loop interators
     var commonTimes = new Array;//Array of common times
+    var overlapRange;//Availability
     for ( i = 0; i < arrOfAvailA.length; i++)
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
@@ -498,7 +540,6 @@ async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
             console.log(overlapRange);
             if ( typeof overlapRange === 'object')
             {
-                console.log("hewwo");
                 commonTimes.push(overlapRange);
             }
         }
@@ -528,4 +569,35 @@ async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 
 function showKey() {
     $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
+}
+
+async function blogPostInput() {
+    let user1 = await userClass();
+    var userName = user1.getUserName();
+    var avatar = user1.getUserAvatar();
+    var blogPost = $('#userStory').val();
+    var time = new Date($.now())
+    var db = firebase.firestore();
+
+    db.collection('blogPosts').add({
+        poster: userName,
+        posterPic: avatar,
+        blogPost: blogPost,
+        timeStamp: time
+    })
+
+    setTimeout(() => {location.reload();}, 1000);
+}
+
+function displayBlogPosts() {
+    var db = firebase.firestore();
+    db.collection('blogPosts').orderBy('timeStamp', 'desc')
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                //$("#profilepic").attr("src", doc.data().posterPic);
+                $('#blogPost').append("<h4>" + doc.data().blogPost + "</h4>");
+                $('#blogPost').append("<p>" + doc.data().timeStamp.toDate() + "</p><br>");
+            })
+        })
 }
