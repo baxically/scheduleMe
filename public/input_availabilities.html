@@ -26,7 +26,7 @@
                 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
                 
                 </head>
-    <body onload="initialize(); getCreateEventPageData();"></body>
+    <body onload="initialize(); getCreateEventPage2Data();"></body>
 
     <div class="container">
     <div class="header">
@@ -39,21 +39,20 @@
     <div class="navbar">
         <a href="home.html">Home</a>
         <a href="profile.html">Profile</a>
-        <a href="create_events.html">Create Hangouts</a>
+        <a href="create_hangouts.html">Create Hangout</a>
         <a href="blog.html">Blog</a>
         <a href="home.html" class="right" onclick="logout()">Sign Out</a>
     </div>
     <div class="wrapper">
         <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
-        <h1>Event Sucessfully Added!</h1>
+        <h1>Hangout Sucessfully Added!</h1>
     </div>
     
     <p id="demo"></p>
             <body>
-            <p id="eKeyPrompt"></p>
-            <p id="eKey"></p> <br>
-            <h4>When will you be free?</h4> <br>
-            Insert key here:<input type="text" id="hangoutID"/><br><br>
+            <p id="eKeyPrompt">Share the following event key with the friends you want to invite!</p>
+            <p id="eKey"></p>
+            <h4>When will you be free?</h4>
             <input id="avail_date" type="text" name="dates" class="form-control pull-right" /> <br><br>
             <div class="dates_list">Your Available Dates:
             </div>
