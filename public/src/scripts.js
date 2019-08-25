@@ -567,3 +567,34 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
 function showKey() {
     $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
 }
+
+async function blogPostInput() {
+    let user1 = await userClass();
+    var userName = user1.getUserName();
+    var avatar = user1.getUserAvatar();
+    var blogPost = $('#userStory').val();
+    var time = new Date($.now())
+    var db = firebase.firestore();
+
+    db.collection('blogPosts').add({
+        poster: userName,
+        posterPic: avatar,
+        blogPost: blogPost,
+        timeStamp: time
+    })
+
+    setTimeout(() => {location.reload();}, 1000);
+}
+
+function displayBlogPosts() {
+    var db = firebase.firestore();
+    db.collection('blogPosts').orderBy('timeStamp', 'desc')
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                //$("#profilepic").attr("src", doc.data().posterPic);
+                $('#blogPost').append("<p>" + doc.data().blogPost + "</p><br>");
+                $('#timeStamp').append("<p>" + doc.data().timeStamp.toDate() + "</p><br>");
+            })
+        })
+}
