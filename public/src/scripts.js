@@ -398,13 +398,16 @@ async function createEvent() {
     var db = firebase.firestore();
     //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
+    var user = firebase.auth().currentUser;
+    userEmail = user.email;
     //This will be returned to be used in the addEventReference function
     await db.collection("hangouts").add({
         // email: document.getElementById("friend_email").value,
         // event: $("#event_name").val(),
         hangoutName: $("#event_name").val(),
         location: $("#location_name").val(),
-        date: $("#avail_date").val()
+        attendees: firebase.firestore.FieldValue.arrayUnion(userEmail)
+        // date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
         // Get the modal for attendee to input time
@@ -413,7 +416,7 @@ async function createEvent() {
         docId = docRef.id;
         $("#eKey").html(docId);
         return docId;
-    })
+    });
     //debugger;
     $("#eKey").html(docId);
     return docId;
@@ -458,6 +461,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
         }
     }, 
     function(start, end, label) {
+        var hangoutID = document.getElementById("hangoutID").value;
         // save current user's email (string)
         var userEmail;
         var user = firebase.auth().currentUser;
@@ -465,12 +469,12 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
         // var userEmail = 'sample@email.com'; (used for testing)
         //add to database
         var db = firebase.firestore();
-        docRef = db.collection('test').doc('#sample')   //Will need to change from 'test/' when we change the collection
+        docRef = db.collection('hangouts').doc(hangoutID)   //Will need to change from 'test/' when we change the collection
             .collection('userInputs').doc(userEmail);
         docRef.get().then(async (doc) => {
             // if document exists, update
             if (doc.exists) {
-                db.collection('test').doc('#sample')
+                db.collection('hangouts').doc(hangoutID)
                 .collection('userInputs').doc(userEmail).update({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
                     endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A'))
@@ -478,14 +482,14 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
             }
             // if document doesn't exist, create new document and add fields
             else {
-                db.collection('test').doc('#sample')
+                db.collection('hangouts').doc(hangoutID)
                 .collection('userInputs').doc(userEmail).set({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
                     endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
-                    theyHaveInput: true
+                    // theyHaveInput: true
                 })
             }
-        // db.collection('test').doc(docId)
+        // db.collection('hangouts').doc(docId)
         // .collection('userInputs').doc(userEmail).get().
         })  .catch(function(error) {
             console.log("Error getting document:", error);
@@ -532,17 +536,18 @@ function findOverlap( availA, availB ) {
     return new Availability(overlapStart, overlapEnd);
 }
 
-function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
+async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
     var i, j;//For loop interators
-    var commonTimes = []//Array of common times
+    var commonTimes = new Array;//Array of common times
     var overlapRange;//Availability
     for ( i = 0; i < arrOfAvailA.length; i++)
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
         {
-            overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
-            if ( typeof overlapRange === 'Availability')
+            var overlapRange = await findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            console.log(overlapRange);
+            if ( typeof overlapRange === 'object')
             {
                 commonTimes.push(overlapRange);
             }
@@ -570,6 +575,10 @@ function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 //                   })
 //     }); 
 
+// Function that displays the popup when this is called
+function openPopup() {
+    modal.style.display = "block";
+}
 
 function showKey() {
     $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
