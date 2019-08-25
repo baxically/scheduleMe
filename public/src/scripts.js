@@ -593,8 +593,8 @@ function displayBlogPosts() {
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 //$("#profilepic").attr("src", doc.data().posterPic);
-                $('#blogPost').append("<p>" + doc.data().blogPost + "</p><br>");
-                $('#timeStamp').append("<p>" + doc.data().timeStamp.toDate() + "</p><br>");
+                $('#blogPost').append("<h4>" + doc.data().blogPost + "</h4>");
+                $('#blogPost').append("<p>" + doc.data().timeStamp.toDate() + "</p><br>");
             })
         })
 }
