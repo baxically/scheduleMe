@@ -486,18 +486,19 @@ function findOverlap( availA, availB ) {
     return new Availability(overlapStart, overlapEnd);
 }
 
-function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
+async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
     var i, j;//For loop interators
-    var commonTimes = []//Array of common times
-    var overlapRange;//Availability
+    var commonTimes = new Array;//Array of common times
     for ( i = 0; i < arrOfAvailA.length; i++)
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
         {
-            overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
-            if ( typeof overlapRange === 'Availability')
+            var overlapRange = await findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            console.log(overlapRange);
+            if ( typeof overlapRange === 'object')
             {
+                console.log("hewwo");
                 commonTimes.push(overlapRange);
             }
         }

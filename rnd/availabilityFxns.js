@@ -13,7 +13,7 @@ class Availability {
     }
 };
 
-function findOverlap( availA, availB ) {
+async function findOverlap( availA, availB ) {
 	var overlapStart;
     var overlapEnd;
     // console.log(availA.startDate);
@@ -55,21 +55,22 @@ function findOverlap( availA, availB ) {
     return a;
 }
 
-function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
+async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
-    console.log(arrOfAvailA[0]);
-    console.log(arrOfAvailB[0]);
+    // console.log(arrOfAvailA[0]);
+    // console.log(arrOfAvailB[0]);
     var i, j;//For loop interators
-    var commonTimes = []//Array of common times
-    var overlapRange;//Availability
+    var commonTimes = new Array;//Array of common times
+    //var overlapRange;//Availability
     for ( i = 0; i < arrOfAvailA.length; i++)
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
         {
-            overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
-            //console.log(overlapRange);
-            if ( typeof overlapRange === 'Availability')
+            var overlapRange = await findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            console.log(overlapRange);
+            if ( typeof overlapRange === 'object')
             {
+                console.log("hewwo");
                 commonTimes.push(overlapRange);
             }
         }
@@ -78,5 +79,5 @@ function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
     return commonTimes;
 }
 
-module.exports = Availability;
-module.exports = compareFriendsAvailability;
+module.exports.Availability = Availability;
+module.exports.compareFriendsAvailability = compareFriendsAvailability;
