@@ -199,13 +199,13 @@ async function addUser(profile) {
 
 async function addHangout() {
     eventId = await $('#eventKey').val();
+    sessionStorage.setItem('docID', eventId);
     var db = firebase.firestore();
     if (eventId === "") {
         alert("There is no event key");
     }
     else {
         eventRef = db.collection("hangouts").doc(eventId)
-
         eventRef.get()
         .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
@@ -215,17 +215,20 @@ async function addHangout() {
                 let i;
                 let eventFound = false;
                 // console.log(eventCheck);
-                for (i of eventCheck) {
-                    if (i.id === eventId) {
-                        eventFound = true;
+                if (eventCheck != null) {
+                    for (i of eventCheck) {
+                        if (i.id === eventId) {
+                            eventFound = true;
+                        }
                     }
                 }
+                
                 if (eventFound) {
                     alert("Event already added");
                 }
-                    else {
-                        await addEventReference(eventId);
-                        var email;
+                else {
+                    await addEventReference(eventId);
+                    var email;
                         var user = firebase.auth().currentUser;
                         email = user.email;
                         await eventRef.update ({
@@ -253,7 +256,8 @@ async function addHangout() {
                         //     }
                         // }
                     }
-                } else {
+                } 
+            else {
                     alert("Event Key not found");
                 }
             });
@@ -291,6 +295,19 @@ async function getCreateEventPageData() {
             let user1 = await userClass();
             var name = await user1.getUserName();
             $("#username").html(name);
+        } else {
+            console.error('user state is broken');
+        }
+    });
+}
+
+async function getCreateEventPage2Data() {
+    firebase.auth().onAuthStateChanged(async function(user) {
+        if (user) {
+            let user1 = await userClass();
+            var name = await user1.getUserName();
+            $("#username").html(name);
+            $("#eKey").html(sessionStorage.getItem('docId'));
         } else {
             console.error('user state is broken');
         }
@@ -392,7 +409,7 @@ async function listEvents(user) {
 async function addEvent() {
     var eventId = await createEvent();
     await addEventReference(eventId);
-    //setTimeout(function(){location.href = 'profile.html';} , 1000)
+    inputTimeRedirect();
 }
 
 async function createEvent() {
@@ -400,27 +417,25 @@ async function createEvent() {
     //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
     var user = firebase.auth().currentUser;
-    userEmail = user.email;
+    userRef =  "users/" + user.email;
     //This will be returned to be used in the addEventReference function
     await db.collection("hangouts").add({
         // email: document.getElementById("friend_email").value,
         // event: $("#event_name").val(),
         hangoutName: $("#event_name").val(),
         location: $("#location_name").val(),
-        attendees: firebase.firestore.FieldValue.arrayUnion(userEmail)
+        attendees: firebase.firestore.FieldValue.arrayUnion(db.doc(userRef))
         // date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
         // Get the modal for attendee to input time
     })
-    .then((docRef) => {
+    .then(async (docRef) => {
         docId = docRef.id;
-        $("#eKey").html(docId);
+        sessionStorage.setItem('docId', docRef.id);
         return docId;
     });
     //debugger;
-    $("#eKey").html(docId);
-    return docId;
 }
 
 async function addEventReference(eventId) {
@@ -462,7 +477,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
         }
     }, 
     function(start, end, label) {
-        var hangoutID = document.getElementById("hangoutID").value;
+        var hangoutID = sessionStorage.getItem('docId');
         // save current user's email (string)
         var userEmail;
         var user = firebase.auth().currentUser;
