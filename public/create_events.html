@@ -123,9 +123,9 @@
             Insert key here:<input type="text" id="hangoutID"/><br><br>
             <input id="avail_date" type="text" name="dates" class="form-control pull-right" /> <br><br>
             <div class="dates_list">Your Available Dates:
+            </div>
         </div>
-        </div>
-
+        <button onclick="profileRedirect();">Return to Profile</button>
         </div>
 
         <script>
@@ -148,7 +148,7 @@
         }
         </script>
 
-        <button onclick="addEvent(); openPopup(); showKey();">Create Event</button>
+        <button onclick="addEvent(); setTimeout(() => {openPopup(); showKey();}, 500)">Create Event</button>
         <br><br>
     
     <p id="demo2"></p>

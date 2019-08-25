@@ -393,15 +393,15 @@ async function createEvent() {
     var db = firebase.firestore();
     //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
-    // var user = firebase.auth().currentUser;
-    // userEmail = user.displayName;
+    var user = firebase.auth().currentUser;
+    userEmail = user.email;
     //This will be returned to be used in the addEventReference function
     await db.collection("hangouts").add({
         // email: document.getElementById("friend_email").value,
         // event: $("#event_name").val(),
         hangoutName: $("#event_name").val(),
         location: $("#location_name").val(),
-        // friend_names: firebase.firestore.FieldValue.arrayUnion(username)
+        attendees: firebase.firestore.FieldValue.arrayUnion(userEmail)
         // date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
@@ -411,7 +411,7 @@ async function createEvent() {
         docId = docRef.id;
         $("#eKey").html(docId);
         return docId;
-    })
+    });
     //debugger;
     $("#eKey").html(docId);
     return docId;
