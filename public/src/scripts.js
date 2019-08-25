@@ -28,33 +28,38 @@ class User {
     }
 };
 
-class userPersonalEvent {
-    constructor(date, emails, hangout, attendees, location) {
-        this.date = date;
-        this.emails = emails;
+class Hangout {
+    constructor(hangout, attendees, location, compiledAvailabilities) {
+        // this.date = date;
+        // this.emails = emails;
         this.hangout = hangout;
         this.attendees = attendees;
         this.location = location;
+        this.compiledAvailabilities = compiledAvailabilities;
     }
 
-    getEventDate() {
-        return this.date;
-    }
+    // getHangoutDate() {
+    //     return this.date;
+    // }
 
-    getEventEmails() {
-        return this.emails;
-    }
+    // getHangoutEmails() {
+    //     return this.emails;
+    // }
 
-    getEventTitle() {
+    getHangoutTitle() {
         return this.hangout;
     }
 
-    getEventAttendees() {
+    getHangoutAttendees() {
         return this.attendees;
     }
 
-    getEventLocation() {
+    getHangoutLocation() {
         return this.location;
+    }
+    
+    getHangoutAvailabilities() {
+        return this.compiledAvailabilities;
     }
 
 };
@@ -87,7 +92,7 @@ async function userClass() {
 
 // This function populates and creates a Event object from firebase data
 // Currently, eventRef is a string. Will adjust for reference when confirmed by others.
-async function eventClass(eventRef) {
+async function hangoutClass(eventRef) {
 
     var db = firebase.firestore();
 
@@ -95,16 +100,39 @@ async function eventClass(eventRef) {
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
-            date: doc.data().date,
-            emails: doc.data().emails,
+            // date: doc.data().date,
+            // emails: doc.data().emails,
             hangoutName: doc.data().hangoutName,
-            friend_names: doc.data().friend_names,
-            location: doc.data().location
+            location: doc.data().location,
+            attendees: doc.data().attendees
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
 
-    
-    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.hangoutName, dataEventPassIn.friend_names, dataEventPassIn.location);
+    var completeArray = [];
+
+    db.collection("hangouts").doc(eventRef).collection("userInputs")
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {            
+            // doc.data() is never undefined for query doc snapshots
+            dataTimePassIn = {
+                startDates : doc.data().startDates,
+                endDates : doc.data().endDates
+            }
+            let personArray = [];
+            for (i = 0; i < dataTimePassIn.startDates.length; i++) {
+                let avail = await new Availability(dataTimePassIn.startDates[i], dataTimePassIn.endDates[i])
+                personArray.push(avail);
+            }
+            completeArray.push(personArray);
+            // console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+    var event_class = await new userPersonalEvent(dataEventPassIn.hangoutName, dataEventPassIn.attendees, dataEventPassIn.location, completeArray);
     return event_class;
 }
 
