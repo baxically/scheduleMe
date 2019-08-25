@@ -435,15 +435,15 @@ async function listEvents(user) {
 // }
 
 async function addEvent() {
-    var eventId = await createEvent();
-    await addEventReference(eventId);
+    await createEvent();
+    await addEventReference(sessionStorage.getItem('docId'));
     inputTimeRedirect();
 }
 
 async function createEvent() {
     var db = firebase.firestore();
     //var email_ref = "users/" + document.getElementById("friend_email").value;
-    var docId = "";
+    var eventId = "";
     var user = firebase.auth().currentUser;
     userRef =  "users/" + user.email;
     //This will be returned to be used in the addEventReference function
@@ -458,10 +458,11 @@ async function createEvent() {
         //email: db.doc(email_ref)
         // Get the modal for attendee to input time
     })
-    .then(async (docRef) => {
-        docId = docRef.id;
-        sessionStorage.setItem('docId', docRef.id);
-        return docId;
+    .then((docRef) => {
+        eventId = docRef.id;
+        //debugger;
+        sessionStorage.setItem('docId', eventId);
+        return sessionStorage.getItem('docId');
     });
     //debugger;
 }
