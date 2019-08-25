@@ -29,11 +29,11 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(date, emails, event, location) {
+    constructor(date, emails, hangout, attendees, location) {
         this.date = date;
         this.emails = emails;
-        this.event = event;
-        //this.friend_names = friend_names;
+        this.hangout = hangout;
+        this.attendees = attendees;
         this.location = location;
     }
 
@@ -46,11 +46,11 @@ class userPersonalEvent {
     }
 
     getEventTitle() {
-        return this.event;
+        return this.hangout;
     }
 
-    getEventFriends() {
-        return this.friend_names;
+    getEventAttendees() {
+        return this.attendees;
     }
 
     getEventLocation() {
@@ -104,7 +104,7 @@ async function eventClass(eventRef) {
     }).catch((err) => {console.error("Error getting documents: ", err)})
 
     
-    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.event, dataEventPassIn.friend_names, dataEventPassIn.location);
+    var event_class = await new userPersonalEvent(dataEventPassIn.date, dataEventPassIn.emails, dataEventPassIn.hangoutName, dataEventPassIn.friend_names, dataEventPassIn.location);
     return event_class;
 }
 
@@ -379,6 +379,7 @@ async function createEvent() {
         date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
+        // Get the modal for attendee to input time
     })
     .then((docRef) => {
         docId = docRef.id;
