@@ -1,5 +1,5 @@
 class User {
-    constructor(email, username, avatar, friends, events) {
+    constructor(email, username, avatar, events) {
         this.email = email;
         this.displayName = username;
         this.avatar = avatar;
@@ -29,11 +29,11 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(date, emails, event, friend_names, location) {
+    constructor(date, emails, event, location) {
         this.date = date;
         this.emails = emails;
         this.event = event;
-        this.friend_names = friend_names;
+        //this.friend_names = friend_names;
         this.location = location;
     }
 
@@ -91,13 +91,13 @@ async function eventClass(eventRef) {
 
     var db = firebase.firestore();
 
-    eventRef = db.collection("test").doc(eventRef);
+    eventRef = db.collection("hangouts").doc(eventRef);
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
             date: doc.data().date,
             emails: doc.data().emails,
-            event: doc.data().event,
+            hangoutName: doc.data().hangoutName,
             friend_names: doc.data().friend_names,
             location: doc.data().location
         }
@@ -195,13 +195,13 @@ async function addUser(profile) {
 }
 
 async function addHangout() {
-    eventId = await document.getElementById('eventKey').value
+    eventId = await $('#eventKey').val();
     var db = firebase.firestore();
     if (eventId === "") {
         alert("There is no event key");
     }
     else {
-        eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
+        eventRef = db.collection("hangouts").doc(eventId)
 
         eventRef.get()
         .then(async (docSnapshot) => {
@@ -254,8 +254,8 @@ async function getProfileData() {
             var name = await user1.getUserName();
             var avatar = await user1.getUserAvatar();
             //debugger;
-            document.getElementById("username").innerHTML = name;
-            document.getElementById("profilepic").src = avatar;
+            $("#username").html(name);
+            $("#profilepic").attr("src", avatar);
             listEvents(user1);
             // listFriends(user1);
         } else {
@@ -264,11 +264,11 @@ async function getProfileData() {
     });
 }
 
+//I don't think we're using this popup prompt anymore so we should consider taking it out 
 function openPrompt() {
     var event = prompt("Please enter the name of your event", "");
     if (event != null) {
-        document.getElementById("demo").innerHTML =
-        "When are you free to host '" + event + "'?";
+        $("#demo").html("When are you free to host '" + event + "'?");
     }
 }
 
@@ -295,27 +295,27 @@ function openPrompt() {
 //     }
 // }
 
+
+//This function doesn't work anymore??
 async function listEvents(user) {
+    debugger;
     var staticEvents = await user.getUserEvents();
     
-    var events = "";
+    //var events = "";
     
     if(staticEvents != null)
     {
         for(var i = 0; i < staticEvents.length; i++)
         {
             var eventName = await staticEvents[i].get().then((doc) => {
-                return doc.data().event;
+                return doc.data().hangoutName;
             });
-            events += "<li>" + eventName + "</li> <br>";
+            $("#eList").append("<li>" + eventName + "</li> <br>");
         }
-        
-        document.getElementById("eList").innerHTML = events;
     }
     else
     {
-        events += "You have no events";
-        document.getElementById("eList").innerHTML = events;
+        $("#eList").html("You have no events");
     }
 }
 
@@ -354,22 +354,22 @@ async function createEvent() {
     //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
     //This will be returned to be used in the addEventReference function
-    await db.collection("test").add({
+    await db.collection("hangouts").add({
         // email: document.getElementById("friend_email").value,
         // event: $("#event_name").val(),
-	event: document.getElementById("event_name").value,
-        location: document.getElementById("location_name").value,
-        date: document.getElementById("avail_date").value
+        hangoutName: $("#event_name").val(),
+        location: $("#location_name").val(),
+        date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
     })
     .then((docRef) => {
         docId = docRef.id;
-        document.getElementById("eKey").innerHTML = docId;
+        $("#eKey").html(docId);
         return docId;
     })
     //debugger;
-    document.getElementById("eKey").innerHTML = docId;
+    $("#eKey").html(docId);
     return docId;
 }
 
@@ -381,7 +381,7 @@ async function addEventReference(eventId) {
     var db = firebase.firestore();
     var userRef = db.collection('users').doc(email);
 
-    var eventRef = "Kevin's_Event_Test/" + eventId;  //Will need to change from 'test/' when we change the collection
+    var eventRef = "hangouts/" + eventId;  //Will need to change from 'test/' when we change the collection
     userRef.update({
         events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
     });
@@ -547,5 +547,5 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
 
 
 function showKey() {
-    document.getElementById("eKeyPrompt").innerHTML = "<p>Share the following event key with the friends you want to invite!</p>";
+    $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
 }
