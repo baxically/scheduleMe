@@ -27,3 +27,28 @@
 [debug] [2019-08-22T00:32:25.335Z] <<< HTTP RESPONSE 200
 [info] i  hosting: Serving hosting files from: public
 [info] +  hosting: Local server: http://localhost:5000
+[debug] [2019-08-25T13:56:05.702Z] ----------------------------------------------------------------------
+[debug] [2019-08-25T13:56:05.705Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\User\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-08-25T13:56:05.705Z] CLI Version:   7.2.2
+[debug] [2019-08-25T13:56:05.705Z] Platform:      win32
+[debug] [2019-08-25T13:56:05.705Z] Node Version:  v10.15.3
+[debug] [2019-08-25T13:56:05.707Z] Time:          Sun Aug 25 2019 14:56:05 GMT+0100 (British Summer Time)
+[debug] [2019-08-25T13:56:05.707Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-08-25T13:56:05.717Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-08-25T13:56:05.718Z] > authorizing via signed-in user
+[debug] [2019-08-25T13:56:05.718Z] [iam] checking project scheduleme-website for permissions ["firebase.projects.get"]
+[debug] [2019-08-25T13:56:05.720Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/scheduleme-website:testIamPermissions  
+
+[debug] [2019-08-25T13:56:06.482Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-25T13:56:06.489Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/scheduleme-website  
+ 
+[debug] [2019-08-25T13:56:06.781Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\User\Documents\GitHub\scheduleMe'...
+[info] 
+[debug] [2019-08-25T13:56:06.789Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/scheduleme-website/webApps/-/config  
+ 
+[debug] [2019-08-25T13:56:07.194Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
