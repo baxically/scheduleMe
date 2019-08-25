@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
         <!-- jQuery library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
 
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -51,6 +51,16 @@
                     <h2>MY HANGOUTS</h2>
                     <p>Things I'm going to...</p>
                     <p id="eList"></p>
+
+                    <!-- THIS CAN EASILY BE REMOVED -->
+                    <p>I'm free on these days! 8/18 - 8/25 & 8/28-8/29</p>
+                    <p>My friend is free on these days! 8/19 - 8/30</p>
+                    <button type="button" id="calcTime" onclick="compareFriendsAvailabilities([new Date('8/18/19'), new Date('8/28/19')],
+                                                                                              [new Date('8/25/19'), new Date('8/29/19')],
+                                                                                              [new Date('8/19/19')],
+                                                                                              [new Date('8/30/19')])">Calculate time</button>
+                    <!-- UP TO HERE -->
+
                     <br>
                     <p id="demo"></p>
                 
@@ -172,8 +182,8 @@
         </div>
         </div>
         
-        <script src="./scripts.js"></script>
-        <script src="./config.js"></script>
+        <script src="./src/scripts.js"></script>
+        <script src="./src/config.js"></script>
 
     </body>
 </html>

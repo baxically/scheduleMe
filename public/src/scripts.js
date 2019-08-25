@@ -1,12 +1,9 @@
-//import User from './user.js';
-//ASK BRIAN ABOUT THIS, WHEN THE CLASS IS IN THE SCRIPT, OTHER FUNCTIONS FAIL
-
 class User {
-    constructor(email, username, avatar, friends, events) {
+    constructor(email, username, avatar, events) {
         this.email = email;
         this.displayName = username;
         this.avatar = avatar;
-        this.friends = friends;
+        // this.friends = friends;
         this.events = events;
     }
 
@@ -22,9 +19,9 @@ class User {
         return this.avatar;
     }
 
-    getUserFriends() {
-        return this.friends;
-    }
+    // getUserFriends() {
+    //     return this.friends;
+    // }
 
     getUserEvents() {
         return this.events;
@@ -32,11 +29,11 @@ class User {
 };
 
 class userPersonalEvent {
-    constructor(date, emails, event, friend_names, location) {
+    constructor(date, emails, event, location) {
         this.date = date;
         this.emails = emails;
         this.event = event;
-        this.friend_names = friend_names;
+        //this.friend_names = friend_names;
         this.location = location;
     }
 
@@ -78,12 +75,12 @@ async function userClass() {
             email: email,
             displayName: doc.data().displayName,
             avatar: doc.data().avatar,
-            friends: doc.data().friends,
+            // friends: doc.data().friends,
             events: doc.data().events
         }
     }).catch((err) => {console.error("Error getting documents: ", err)})
     
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, dataPassIn.friends, dataPassIn.events);
+    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, /*dataPassIn.friends,*/ dataPassIn.events);
     //debugger;
     return user_class;
 }
@@ -94,13 +91,13 @@ async function eventClass(eventRef) {
 
     var db = firebase.firestore();
 
-    eventRef = db.collection("test").doc(eventRef);
+    eventRef = db.collection("hangouts").doc(eventRef);
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
             date: doc.data().date,
             emails: doc.data().emails,
-            event: doc.data().event,
+            hangoutName: doc.data().hangoutName,
             friend_names: doc.data().friend_names,
             location: doc.data().location
         }
@@ -198,7 +195,7 @@ async function addUser(profile) {
 }
 
 async function addHangout() {
-    eventId = await document.getElementById('eventKey').value
+    eventId = await $('#eventKey').val();
     var db = firebase.firestore();
     if (eventId === "") {
         alert("There is no event key");
@@ -211,7 +208,7 @@ async function addHangout() {
         // }
         //else {
         console.log(queryRef);    
-        eventRef = db.collection("Kevin's_Event_Testing").doc(eventId)
+        eventRef = db.collection("hangouts").doc(eventId)
 
             eventRef.get()
             .then(async (docSnapshot) => {
@@ -265,8 +262,8 @@ async function getProfileData() {
             var name = await user1.getUserName();
             var avatar = await user1.getUserAvatar();
             //debugger;
-            document.getElementById("username").innerHTML = name;
-            document.getElementById("profilepic").src = avatar;
+            $("#username").html(name);
+            $("#profilepic").attr("src", avatar);
             listEvents(user1);
             // listFriends(user1);
         } else {
@@ -275,11 +272,11 @@ async function getProfileData() {
     });
 }
 
+//I don't think we're using this popup prompt anymore so we should consider taking it out 
 function openPrompt() {
     var event = prompt("Please enter the name of your event", "");
     if (event != null) {
-        document.getElementById("demo").innerHTML =
-        "When are you free to host '" + event + "'?";
+        $("#demo").html("When are you free to host '" + event + "'?");
     }
 }
 
@@ -306,27 +303,27 @@ function openPrompt() {
 //     }
 // }
 
+
+//This function doesn't work anymore??
 async function listEvents(user) {
+    debugger;
     var staticEvents = await user.getUserEvents();
     
-    var events = "";
+    //var events = "";
     
     if(staticEvents != null)
     {
         for(var i = 0; i < staticEvents.length; i++)
         {
             var eventName = await staticEvents[i].get().then((doc) => {
-                return doc.data().event;
+                return doc.data().hangoutName;
             });
-            events += "<li>" + eventName + "</li> <br>";
+            $("#eList").append("<li>" + eventName + "</li> <br>");
         }
-        
-        document.getElementById("eList").innerHTML = events;
     }
     else
     {
-        events += "You have no events";
-        document.getElementById("eList").innerHTML = events;
+        $("#eList").html("You have no events");
     }
 }
 
@@ -365,21 +362,22 @@ async function createEvent() {
     //var email_ref = "users/" + document.getElementById("friend_email").value;
     var docId = "";
     //This will be returned to be used in the addEventReference function
-    await db.collection("test").add({
+    await db.collection("hangouts").add({
         // email: document.getElementById("friend_email").value,
-        event: document.getElementById("event_name").value,
-        location: document.getElementById("location_name").value,
-        date: document.getElementById("avail_date").value
+        // event: $("#event_name").val(),
+        hangoutName: $("#event_name").val(),
+        location: $("#location_name").val(),
+        date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
     })
     .then((docRef) => {
         docId = docRef.id;
-        document.getElementById("eKey").innerHTML = docId;
+        $("#eKey").html(docId);
         return docId;
     })
     //debugger;
-    document.getElementById("eKey").innerHTML = docId;
+    $("#eKey").html(docId);
     return docId;
 }
 
@@ -391,7 +389,7 @@ async function addEventReference(eventId) {
     var db = firebase.firestore();
     var userRef = db.collection('users').doc(email);
 
-    var eventRef = "Kevin's_Event_Test/" + eventId;  //Will need to change from 'test/' when we change the collection
+    var eventRef = "hangouts/" + eventId;  //Will need to change from 'test/' when we change the collection
     userRef.update({
         events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
     });
@@ -422,7 +420,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
                 db.collection('test').doc('#sample')
                 .collection('userInputs').doc(userEmail).update({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
-                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
+                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A'))
                 })    
             }
             // if document doesn't exist, create new document and add fields
@@ -444,6 +442,91 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
         $(datesDiv).append('<li' + ' id=test>' +start.format('YYYY-MM-DD hh:mm A')+' to '+end.format('YYYY-MM-DD hh:mm A')+'</li>');
     });
 });
+
+function compareDates( startA, endA, startB, endB ) {
+    // console.log(startA);
+    // console.log(endA);
+    // console.log(startB);
+    // console.log(endB);
+
+	var overlapStart;
+	var overlapEnd;
+	if ( startA >= endB )
+	{
+		//return "No overlap.";
+		return;
+
+	}
+	else if ( startB >= endA )
+	{
+		//return "No overlap.";
+		return;
+	}
+	else if ( startA <= startB && endA >= endB )
+	{
+		//return "Overlap!!!";
+		overlapStart = startB;
+		overlapEnd = endB;
+	}
+	else if ( startA <= startB && endA < endB )
+	{
+		//return "Overlap!!!";
+		overlapStart = startB;
+		overlapEnd = endA;
+	}
+	else if ( startA >= startB && endB <= endA )
+	{
+		//return "Overlap!!!";
+		overlapStart = startA;
+		overlapEnd = endB;
+	}
+	else if ( startA >= startB && endA < endB )
+	{
+		//return "Overlap!!!";
+		overlapStart = startA;
+		overlapEnd = endA;
+    }
+    // console.log(overlapStart);
+    // console.log(overlapEnd);
+
+    //var options = { year: '2-digit', month: '2-digit', day: 'numeric' };
+
+	//return overlapStart.format('YYYY-MM-DD hh:mm A') + " to " + overlapEnd.format('YYYY-MM-DD hh:mm A');
+    return overlapStart.toLocaleDateString() + " to " + overlapEnd.toLocaleDateString();
+}
+
+// var arrStartA = [Date("8/18/19"), Date("8/28/19")];
+// var arrEndA = [Date("8/25/19"), Date("8/29/19")];
+// var arrStartB = [Date("8/19/19")];
+// var arrEndB = [Date("8/21/19")];
+// var commonTimes = "";
+// var allCommonTimes = "";
+function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
+{
+    //alert(arrStartA);
+    var i, j;
+    var commonTimes = "";
+    var allCommonTimes = "";
+    for ( i = 0; i < arrStartA.length; i++)
+    {
+        for ( j = 0; j < arrStartB.length; j++ )
+        {
+            commonTimes = compareDates(arrStartA[i], arrEndA[i], arrStartB[j], arrEndB[j]);
+            console.log(commonTimes);
+            if ( typeof commonTimes === 'undefined')
+            {
+
+            }
+            else
+            {
+                allCommonTimes = allCommonTimes + commonTimes + '\n';
+            }
+        }
+    }
+    console.log(allCommonTimes);
+    alert(allCommonTimes);
+    return allCommonTimes;
+}
 
 //     })
 //     // console.log("New date range selected: " + start.format('M/DD hh:mm A') +
@@ -472,5 +555,5 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
 
 
 function showKey() {
-    document.getElementById("eKeyPrompt").innerHTML = "<p>Share the following event key with the friends you want to invite!</p>";
+    $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
 }

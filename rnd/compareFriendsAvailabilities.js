@@ -74,7 +74,8 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
                 allCommonTimes = allCommonTimes + commonTimes + '\n';
             }
         }
-    }
+	}
+	alert("hi");
     return allCommonTimes;
 }
 
