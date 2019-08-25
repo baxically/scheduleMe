@@ -362,6 +362,7 @@ async function createEvent() {
         date: $("#avail_date").val()
         //friend_name: document.getElementById("friend_name").value,
         //email: db.doc(email_ref)
+        // Get the modal for attendee to input time
     })
     .then((docRef) => {
         docId = docRef.id;
