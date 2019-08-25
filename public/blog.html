@@ -43,41 +43,28 @@
         <a href="blog.html">Blog</a>
         <a href="home.html" class="right" onclick="logout()">Sign Out</a>
     </div>
-        Name of Event:<input type="text" id="event_name"><br>
-    <div class="wrapper">
-        <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
-        
-    </div>
-    
-    <p id="demo"></p>
-    Write the name of the location:<input type="text" id="location_name"> 
-    <br><br>
-    <!-- <label>Pick times you're available here:</label> -->
-    When will you be free?
-    <input id="avail_date" type="text" name="dates" class="form-control pull-right" /> <br><br>
-    
-    <div class="dates_list">Your Available Dates:
 
-    </div>
+    <h1 style="text-align: center">Finding Time Made Easy</h1>
+    <p style="text-align: center">Tell us about your successful hangouts!</p>
 
-    <!-- <p>Who would you like to invite?</p> 
-    later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
-        <!--<div class="input_fields_wrap">
-            <div></div>
-                Name:<input type="text" id="friend_name">
-                Email:<input type="text" id="friend_email">
+    <div style="text-align: center">
+        <input type="text" placeholder="Your story"></input>
+    </div>
+    <br>
+
+    <div class="userStories" style="text-align: center">
+        <h1>Other Users' Stories</h1>
+        <div class="row">
+            <div class="side">
+                <!--Person's profile picture if they wrote a comment--><img id="profilepic" src="profilepic" width=100px></img>
             </div>
-            <br>
-            <button class="add_field_button">Add More Friends</button>
-        </div>-->
-  
-        <button onclick="addEvent(); showKey();">Create Event</button>
-        <br><br>
-        <p id="eKeyPrompt"></p>
-        <p id="eKey"></p>
-
-    
-    <p id="demo2"></p>
+            <div class="main">
+                <div class="column">
+                    <p style="text-align: left">This is a user story</p>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="footer">
         <h2></h2>
