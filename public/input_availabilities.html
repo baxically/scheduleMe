@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create Hangout</title>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+                
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-firestore.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+                
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+                <!-- Latest compiled and minified CSS -->
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+                <!-- jQuery library -->
+                <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+
+                <!-- Latest compiled JavaScript -->
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+                
+                <link rel="stylesheet" type="text/css" href="./profile_style.css"/>
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+                
+                </head>
+    <body onload="initialize(); getCreateEventPageData();"></body>
+
+    <div class="container">
+    <div class="header">
+        <div class="caption">
+            <span class="border" id="username"></span>
+        </div>
+        </h1>
+    </div>
+    
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="profile.html">Profile</a>
+        <a href="create_events.html">Create Hangouts</a>
+        <a href="blog.html">Blog</a>
+        <a href="home.html" class="right" onclick="logout()">Sign Out</a>
+    </div>
+    <div class="wrapper">
+        <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
+        <h1>Event Sucessfully Created</h1>
+    </div>
+    
+    <p id="demo"></p>
+            <body>
+            <p id="eKeyPrompt"></p>
+            <p id="eKey"></p> <br>
+            <h4>When will you be free?</h4> <br>
+            Insert key here:<input type="text" id="hangoutID"/><br><br>
+            <input id="avail_date" type="text" name="dates" class="form-control pull-right" /> <br><br>
+            <div class="dates_list">Your Available Dates:
+            </div>
+
+            <button onclick="profileRedirect();">Return to Profile</button>
+        <br><br>
+    
+    <p id="demo2"></p>
+    
+    <div class="footer">
+        <h2></h2>
+    </div>
+    
+    <script src="./src/scripts.js"></script>
+    <script src="./src/config.js"></script>
+    
+    </body>
+</html> 
