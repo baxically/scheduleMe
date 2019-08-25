@@ -53,12 +53,6 @@
     Write the name of the location:<input type="text" id="location_name"> 
     <br><br>
     <!-- <label>Pick times you're available here:</label> -->
-    When will you be free?
-    <input id="avail_date" type="text" name="dates" class="form-control pull-right" /> <br><br>
-    
-    <div class="dates_list">Your Available Dates:
-
-    </div>
 
     <!-- <p>Who would you like to invite?</p> 
     later once we get the user class working, the google contacts api will be used with jquery dom manipulation to be able to edit this with actual names -->
@@ -122,11 +116,16 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h1>Event Sucessfully Created</h1>
-            <p>When will you be free?</p> <br> <br>
-            <p>Put Calendar Here</p>
+            <h1>Input Available Times</h1>
+            <p id="eKeyPrompt"></p>
+            <p id="eKey"></p> <br>
+            <h4>When will you be free?</h4> <br>
+            Insert key here:<input type="text" id="hangoutID"/><br><br>
+            <input id="avail_date" type="text" name="dates" class="form-control pull-right" /> <br><br>
+            <div class="dates_list">Your Available Dates:
+            </div>
         </div>
-
+        <button onclick="profileRedirect();">Return to Profile</button>
         </div>
 
         <script>
@@ -136,10 +135,6 @@
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
 
-        // Function that displays the popup when this is called
-        function openPopup() {
-            modal.style.display = "block";
-        }
         // When the user clicks on <span> (x), close the modal
         span.onclick = function() {
         modal.style.display = "none";
@@ -153,11 +148,8 @@
         }
         </script>
 
-        <button onclick="addEvent(); showKey(); openPopup();">Create Event</button>
+        <button onclick="addEvent(); setTimeout(() => {openPopup(); showKey();}, 500)">Create Event</button>
         <br><br>
-        <p id="eKeyPrompt"></p>
-        <p id="eKey"></p>
-
     
     <p id="demo2"></p>
     
