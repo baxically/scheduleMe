@@ -338,7 +338,6 @@ function openPrompt() {
 
 //This function doesn't work anymore??
 async function listEvents(user) {
-    debugger;
     var staticEvents = await user.getUserEvents();
     
     //var events = "";
@@ -347,15 +346,17 @@ async function listEvents(user) {
     {
         for(var i = 0; i < staticEvents.length; i++)
         {
+            var hangoutId;
             var eventName = await staticEvents[i].get().then((doc) => {
+                hangoutId = doc.id;
                 return doc.data().hangoutName;
             });
-            $("#eList").append("<li>" + eventName + "</li> <br>");
+            $("#eList").append("<li>" + eventName + "              <button type=\"popup\" onclick=\"displayHangoutDetails('" + hangoutId + "');\">Show Details</button></li> <br>");
         }
     }
     else
     {
-        $("#eList").html("You have no events");
+        $("#eList").html("You have no hangouts");
     }
 }
 
@@ -600,3 +601,27 @@ function displayBlogPosts() {
             })
         })
 }
+
+function displayHangoutDetails(hangoutId) {
+    eventModal.style.display = "block";
+    var db = firebase.firestore();
+    hangoutRef = db.collection('hangouts').doc(hangoutId);
+    hangoutRef.get()
+        .then(async (doc) => {
+            $('#hangoutName').append(doc.data().hangoutName + ' Details');
+            $('#location').append('Location: ' + doc.data().location);
+            $('#date').append('Date: ' + doc.data().date);
+            var people = await doc.data().attendees;
+            console.log(people);
+            debugger;
+            var i = 0;
+            for(i; i < people.length; i++) {
+                var person = await people[i].get()
+                    .then((doc) => {
+                        return doc.data().displayName;
+                    })
+                $('#attendees').append('<li>' + person + '</li><br>');
+            }
+        })
+}
+// When the user clicks on <span> (x), close the modal
