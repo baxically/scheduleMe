@@ -546,6 +546,10 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
 //                   })
 //     }); 
 
+// Function that displays the popup when this is called
+function openPopup() {
+    modal.style.display = "block";
+}
 
 function showKey() {
     $("#eKeyPrompt").html("<p>Share the following event key with the friends you want to invite!</p>");
