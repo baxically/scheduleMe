@@ -679,13 +679,14 @@ async function displayHangoutDetails(hangoutId) {
             $('#location').append('Location: ' + doc.data().location);
             console.log(matchingDates.length)
             if (matchingDates.length > 0) {
+                $('#date').append('Dates: ');
                 for (var i = 0; i < matchingDates.length; i++) {
                     var avail = matchingDates[i];
                     console.log(matchingDates[i]);
                     var startDate = avail.getStartDate();
                     var endDate = avail.getEndDate();
                     console.log(startDate);
-                    $('#date').append('Dates: <li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
+                    $('#date').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
                 }
             }
             else {
