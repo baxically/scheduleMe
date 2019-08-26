@@ -446,3 +446,21 @@ async function displayHangoutDetails(hangoutId) {
         })
 }
 // When the user clicks on <span> (x), close the modal
+async function deleteHangoutDoc()
+{
+    var db = firebase.firestore();
+    var time = new Date($.now());
+    
+    db.collection("hangouts").where("endDates", "<", time) 
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data()); //Once we get these dates, call .delete()
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+}
