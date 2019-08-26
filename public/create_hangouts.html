@@ -21,6 +21,16 @@
 
                 <!-- Latest compiled JavaScript -->
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+                <!-- Global site tag (gtag.js) - Google Analytics -->
+                <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145922769-1"></script>
+                <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'UA-145922769-1');
+                </script>
                 
                 <link rel="stylesheet" type="text/css" href="./profile_style.css"/>
                 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -39,18 +49,18 @@
     <div class="navbar">
         <a href="home.html">Home</a>
         <a href="profile.html">Profile</a>
-        <a href="create_events.html">Create Hangouts</a>
+        <a href="create_hangouts.html">Create Hangout</a>
         <a href="blog.html">Blog</a>
         <a href="home.html" class="right" onclick="logout()">Sign Out</a>
     </div>
-        Name of Event:<input type="text" id="event_name"><br>
+        Name of Event:<input type="text" id="event_name" placeholder="Ex: Birthday Dinner"><br>
     <div class="wrapper">
         <!-- <button type="button" id="eventButton" onclick="openPrompt()">Create event</button> -->
         
     </div>
     
     <p id="demo"></p>
-    Write the name of the location:<input type="text" id="location_name"> 
+    Write the name of the location:<input type="text" id="location_name" placeholder="Ex: John Doe's House"> 
     <br><br>
     <!-- <label>Pick times you're available here:</label> -->
 
@@ -148,7 +158,7 @@
         }
         </script>
 
-        <button onclick="addEvent(); setTimeout(() => {openPopup(); showKey();}, 500)">Create Event</button>
+        <button onclick="addEvent();">Create Event</button>
         <br><br>
     
     <p id="demo2"></p>
@@ -158,6 +168,9 @@
     </div>
     
     <script src="./src/scripts.js"></script>
+    <script src="./src/user.js"></script>
+    <script src="./src/hangout.js"></script>
+    <script src="./src/availability.js"></script>
     <script src="./src/config.js"></script>
     
     </body>

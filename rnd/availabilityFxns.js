@@ -17,40 +17,40 @@ class Availability {
 function findOverlap( availA, availB ) {
   	var overlapStart;
     var overlapEnd;
-    // console.log("Array A");
-    // console.log(availA.startDate);
-    // console.log(availA.endDate);
-    // console.log("Array B");
-    // console.log(availB.startDate);
-    // console.log(availB.endDate);
-	if ( availA.startDate >= availB.endDate )
+    console.log("Array A");
+    console.log(availA.getStartDate());
+    console.log(availA.getEndDate());
+    console.log("Array B");
+    console.log(availB.getStartDate());
+    console.log(availB.getEndDate());
+	if ( availA.getStartDate() >= availB.getEndDate() )
 	{
 		return;//No overlap
 
 	}
-	else if ( availB.startDate >= availA.endDate )
+	else if ( availB.getStartDate() >= availA.getEndDate() )
 	{
 		return;//No overlap
 	}
-	else if ( availA.startDate <= availB.startDate && availA.endDate >= availB.endDate )
+	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() >= availB.getEndDate() )
 	{
-		overlapStart = availB.startDate;
-		overlapEnd = availB.endDate;
+		overlapStart = availB.getStartDate();
+		overlapEnd = availB.getEndDate();
 	}
-	else if ( availA.startDate <= availB.startDate && availA.endDate < avialB.endDate )
+	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < avialB.getEndDate() )
 	{
-		overlapStart = availB.startDate;
-		overlapEnd = availA.endDate;
+		overlapStart = availB.getStartDate();
+		overlapEnd = availA.getEndDate();
 	}
-	else if ( availA.startDate >= availB.startDate && availB.endDate <= availA.endDate )
+	else if ( availA.startDate() >= availB.startDate() && availB.endDate() <= availA.endDate() )
 	{
-		overlapStart = availA.startDate;
-		overlapEnd = availB.endDate;
+		overlapStart = availA.getStartDate();
+		overlapEnd = availB.getEndDate();
 	}
-	else if ( availA.startDate >= availB.startDate && availA.endDate < availB.endDate )
+	else if ( availA.getStartDate() >= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
 	{
-		overlapStart = availA.startDate;
-		overlapEnd = availA.endDate;
+		overlapStart = availA.getStartDate();
+		overlapEnd = availA.getEndDate();
     }
     
     var a = new Availability(overlapStart, overlapEnd);

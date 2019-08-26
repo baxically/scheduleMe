@@ -21,6 +21,16 @@
 
                 <!-- Latest compiled JavaScript -->
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+                <!-- Global site tag (gtag.js) - Google Analytics -->
+                <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145922769-1"></script>
+                <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'UA-145922769-1');
+                </script>
                 
                 <link rel="stylesheet" type="text/css" href="./profile_style.css"/>
                 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -39,7 +49,7 @@
     <div class="navbar">
         <a href="home.html">Home</a>
         <a href="profile.html">Profile</a>
-        <a href="create_events.html">Create Hangouts</a>
+        <a href="create_hangouts.html">Create Hangout</a>
         <a href="blog.html">Blog</a>
         <a href="home.html" class="right" onclick="logout()">Sign Out</a>
     </div>
@@ -53,6 +63,8 @@
     </div>
     <br>
 
+    <hr>
+
     <div class="userStories" style="text-align: center">
         <h1>Other Users' Stories</h1>    
             <div style="text-align:center">
@@ -60,13 +72,17 @@
                 </p>
             </div>    
         </div>
-    </div>
+    
     
     <div class="footer">
         <h2></h2>
     </div>
+</div>
     
     <script src="./src/scripts.js"></script>
+    <script src="./src/user.js"></script>
+    <script src="./src/hangout.js"></script>
+    <script src="./src/availability.js"></script>
     <script src="./src/config.js"></script>
     
     </body>
