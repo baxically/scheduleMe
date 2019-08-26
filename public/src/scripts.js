@@ -683,7 +683,7 @@ async function displayHangoutDetails(hangoutId) {
                     var avail = matchingDates[i];
                     var startDate = avail.getStartDate();
                     var endDate = avail.getEndDate();
-                    $('#attendees').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
+                    $('#date').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
                 }
             }
             else {
