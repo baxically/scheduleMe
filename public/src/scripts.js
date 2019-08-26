@@ -681,11 +681,11 @@ async function displayHangoutDetails(hangoutId) {
             if (matchingDates.length > 0) {
                 for (var i = 0; i < matchingDates.length; i++) {
                     var avail = matchingDates[i];
-                    console.log(matchingDates[i]);
+                    // console.log(matchingDates[i]);
                     var startDate = avail.getStartDate();
                     var endDate = avail.getEndDate();
-                    console.log(startDate);
-                    console.log(typeof startDate);
+                    // console.log(startDate);
+                    // console.log(typeof startDate);
                     if (typeof startDate === 'object') {
                         $('#date').append('Dates: <li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
                     }
