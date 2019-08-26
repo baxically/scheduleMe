@@ -90,8 +90,8 @@ async function userClass() {
     return user_class;
 }
 
-// This function populates and creates a Event object from firebase data
-// Currently, eventRef is a string. Will adjust for reference when confirmed by others.
+// This function populates and creates a Hangout object from firebase data
+// Currently, eventRef is a string.
 async function hangoutClass(eventRef) {
 
     var db = firebase.firestore();
@@ -546,7 +546,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
     });
 });
 
-function findOverlap( availA, availB ) {
+async function findOverlap( availA, availB ) {
 	var overlapStart;
 	var overlapEnd;
 	if ( availA.getStartDate() >= availB.getEndDate() )
@@ -582,7 +582,7 @@ function findOverlap( availA, availB ) {
     return new Availability(overlapStart, overlapEnd);
 }
 
-function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
+async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
     var i, j;//For loop interators
     var commonTimes = new Array;//Array of common times
@@ -590,7 +590,7 @@ function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
         {
-            var overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            var overlapRange = await findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
             if ( typeof overlapRange === 'object')
             {
                 commonTimes.push(overlapRange);
@@ -600,7 +600,7 @@ function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
     return commonTimes;
 }
 
-function reduceAvailability(arrOfAllFriendsAvail)
+async function reduceAvailability(arrOfAllFriendsAvail)
 {
     // var arr = await arrOfAllFriendsAvail.reduce(compareFriendsAvailability, Promise.resolve(arrOfAllFriendsAvail[0]));
     var arr = arrOfAllFriendsAvail.reduce(compareFriendsAvailability);
@@ -667,7 +667,9 @@ function displayBlogPosts() {
         })
 }
 
-function displayHangoutDetails(hangoutId) {
+async function displayHangoutDetails(hangoutId) {
+    var newHangout = await hangoutClass(hangoutId);
+    var matchingDates = await reduceAvailability(newHangout.getHangoutAvailabilities());
     eventModal.style.display = "block";
     var db = firebase.firestore();
     hangoutRef = db.collection('hangouts').doc(hangoutId);
@@ -675,7 +677,18 @@ function displayHangoutDetails(hangoutId) {
         .then(async (doc) => {
             $('#hangoutName').append(doc.data().hangoutName + ' Details');
             $('#location').append('Location: ' + doc.data().location);
-            $('#date').append('Date: ' + doc.data().date);
+            
+            if (matchingDates.length > 0) {
+                for (var i = 0; i < matchingDates.length; i++) {
+                    var avail = matchingDates[i];
+                    var startDate = avail.getStartDate();
+                    var endDate = avail.getEndDate();
+                    $('#attendees').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
+                }
+            }
+            else {
+                $('#date').append("No matching dates found");
+            }
             var people = await doc.data().attendees;
             console.log(people);
             var i = 0;
