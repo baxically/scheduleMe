@@ -15,11 +15,14 @@ class Availability {
 
 $(function() { // Chrystal's date picker: once apply is pressed, start and end date are appended to a list of availble dates
   $('input[name="dates"]').daterangepicker({
+        autoUpdateInput: false,
         timePicker: true,
-        startDate: moment(),
-        endDate: moment().add(2, 'day'),
+        //startDate: moment().subtract(1, 'day'),
+        //endDate: moment().subtract(1, 'day'),
+        minDate: moment(),
         locale: {
             format: 'M/DD hh:mm A'
+            //cancelLabel: 'Clear'
         }
     }, 
     function(start, end, label) {
