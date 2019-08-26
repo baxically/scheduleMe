@@ -677,7 +677,7 @@ async function displayHangoutDetails(hangoutId) {
         .then(async (doc) => {
             $('#hangoutName').append(doc.data().hangoutName + ' Details');
             $('#location').append('Location: ' + doc.data().location);
-            
+            console.log(matchingDates.length)
             if (matchingDates.length > 0) {
                 for (var i = 0; i < matchingDates.length; i++) {
                     var avail = matchingDates[i];
@@ -685,7 +685,7 @@ async function displayHangoutDetails(hangoutId) {
                     var startDate = avail.getStartDate();
                     var endDate = avail.getEndDate();
                     console.log(startDate);
-                    $('#date').append('Dates: <li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
+                    $('#date').append('Dates: <li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
                 }
             }
             else {
