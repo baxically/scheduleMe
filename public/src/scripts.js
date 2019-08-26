@@ -685,7 +685,13 @@ async function displayHangoutDetails(hangoutId) {
                     var startDate = avail.getStartDate();
                     var endDate = avail.getEndDate();
                     console.log(startDate);
-                    $('#date').append('Dates: <li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
+                    console.log(typeof startDate);
+                    if (typeof startDate === 'object') {
+                        $('#date').append('Dates: <li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
+                    }
+                    else {
+                        $('#date').append('Dates: <li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
+                    }
                 }
             }
             else {
