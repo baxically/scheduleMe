@@ -4,7 +4,7 @@
   "description": "UCR FLEAP London Summer 2019",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/baxically/scheduleMe/issues"
   },
-  "homepage": "https://github.com/baxically/scheduleMe#readme"
+  "homepage": "https://github.com/baxically/scheduleMe#readme",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
 }
