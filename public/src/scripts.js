@@ -563,7 +563,7 @@ async function findOverlap( availA, availB ) {
 		overlapStart = availB;
 		overlapEnd = availB;
 	}
-	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < avialB.getEndDate() )
+	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
 	{
 		overlapStart = availB;
 		overlapEnd = availA;
