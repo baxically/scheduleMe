@@ -546,7 +546,7 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
     });
 });
 
-async function findOverlap( availA, availB ) {
+function findOverlap( availA, availB ) {
 	var overlapStart;
 	var overlapEnd;
 	if ( availA.getStartDate() >= availB.getEndDate() )
@@ -560,29 +560,29 @@ async function findOverlap( availA, availB ) {
 	}
 	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() >= availB.getEndDate() )
 	{
-		overlapStart = availB;
-		overlapEnd = availB;
+		overlapStart = availB.getStartDate();
+		overlapEnd = availB.getEndDate();
 	}
 	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
 	{
-		overlapStart = availB;
-		overlapEnd = availA;
+		overlapStart = availB.getStartDate();
+		overlapEnd = availA.getEndDate();
 	}
 	else if ( availA.getStartDate() >= availB.getStartDate() && availB.getEndDate() <= availA.getEndDate() )
 	{
-		overlapStart = availA;
-		overlapEnd = availB;
+		overlapStart = availA.getStartDate();
+		overlapEnd = availB.getEndDate();
 	}
 	else if ( availA.getStartDate() >= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
 	{
-		overlapStart = availA;
-		overlapEnd = availA;
+		overlapStart = availA.getStartDate();
+		overlapEnd = availA.getEndDate();
     }
 
     return new Availability(overlapStart, overlapEnd);
 }
 
-async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
+function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
     var i, j;//For loop interators
     var commonTimes = new Array;//Array of common times
@@ -590,7 +590,7 @@ async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
         {
-            var overlapRange = await findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
+            var overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
             if ( typeof overlapRange === 'object')
             {
                 commonTimes.push(overlapRange);
@@ -600,7 +600,7 @@ async function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
     return commonTimes;
 }
 
-async function reduceAvailability(arrOfAllFriendsAvail)
+function reduceAvailability(arrOfAllFriendsAvail)
 {
     // var arr = await arrOfAllFriendsAvail.reduce(compareFriendsAvailability, Promise.resolve(arrOfAllFriendsAvail[0]));
     var arr = arrOfAllFriendsAvail.reduce(compareFriendsAvailability);
