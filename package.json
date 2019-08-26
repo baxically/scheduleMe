@@ -1,0 +1,22 @@
+{
+  "name": "scheduleme",
+  "version": "1.0.0",
+  "description": "UCR FLEAP London Summer 2019",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baxically/scheduleMe.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baxically/scheduleMe/issues"
+  },
+  "homepage": "https://github.com/baxically/scheduleMe#readme",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
