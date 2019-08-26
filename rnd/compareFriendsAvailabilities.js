@@ -50,10 +50,10 @@ function compareDates( startA, endA, startB, endB ) {
 
 }
 
-var arrStartA = [Date("8/18/19"), Date("8/28/19")];
-var arrEndA = [Date("8/25/19"), Date("8/29/19")];
-var arrStartB = [Date("8/19/19")];
-var arrEndB = [Date("8/21/19")];
+// var arrStartA = [Date("8/18/19"), Date("8/28/19")];
+// var arrEndA = [Date("8/25/19"), Date("8/29/19")];
+// var arrStartB = [Date("8/19/19")];
+// var arrEndB = [Date("8/21/19")];
 var commonTimes = "";
 var allCommonTimes = "";
 function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
@@ -64,7 +64,7 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
         for ( j = 0; j < arrStartB.length; j++ )
         {
             commonTimes = compareDates(arrStartA[i], arrEndA[i], arrStartB[j], arrEndB[j]);
-            console.log(commonTimes);
+            //console.log(commonTimes);
             if ( typeof commonTimes === 'undefined')
             {
 
@@ -75,7 +75,7 @@ function compareFriendsAvailabilities(arrStartA, arrEndA, arrStartB, arrEndB)
             }
         }
 	}
-	alert("hi");
+	//alert("hi");
     return allCommonTimes;
 }
 

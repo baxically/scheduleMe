@@ -56,7 +56,7 @@ test("Reduce Test No Overlap", async function() {
     const expected = [];
 
     const received = await Availability.reduceAvailability(allF);
-    console.log(received);
+    //console.log(received);
 
     expect(received).toEqual(expected);
 });
