@@ -121,14 +121,22 @@
             // When the user clicks on <span> (x), close the modal
             span.onclick = function() {
                 eventModal.style.display = "none";
-                location.reload();
+                $('#hangoutName').empty();
+                $('#location').empty();
+                $('#date').empty();
+                $('#attendees').empty();
+                // location.reload();
             }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
                 if (event.target == eventModal) {
                     eventModal.style.display = "none";
-                    location.reload();
+                    $('#hangoutName').empty();
+                    $('#location').empty();
+                    $('#date').empty();
+                    $('#attendees').empty();
+                    // location.reload();
                 }
             }
         </script>
