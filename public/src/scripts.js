@@ -1,141 +1,3 @@
-class User {
-    constructor(email, username, avatar, events) {
-        this.email = email;
-        this.displayName = username;
-        this.avatar = avatar;
-        // this.friends = friends;
-        this.events = events;
-    }
-
-    getUserEmail() {
-        return this.email;
-    }
-
-    getUserName() {
-        return this.displayName;
-    }
-
-    getUserAvatar() {
-        return this.avatar;
-    }
-
-    // getUserFriends() {
-    //     return this.friends;
-    // }
-
-    async getUserEvents() {
-        return this.events;
-    }
-};
-
-class Hangout {
-    constructor(hangout, attendees, location, compiledAvailabilities) {
-        // this.date = date;
-        // this.emails = emails;
-        this.hangout = hangout;
-        this.attendees = attendees;
-        this.location = location;
-        this.compiledAvailabilities = compiledAvailabilities;
-    }
-
-    // getHangoutDate() {
-    //     return this.date;
-    // }
-
-    // getHangoutEmails() {
-    //     return this.emails;
-    // }
-
-    getHangoutTitle() {
-        return this.hangout;
-    }
-
-    getHangoutAttendees() {
-        return this.attendees;
-    }
-
-    getHangoutLocation() {
-        return this.location;
-    }
-    
-    getHangoutAvailabilities() {
-        return this.compiledAvailabilities;
-    }
-
-};
-
-async function userClass() {
-    var email;
-    var dataPassIn;
-    
-    //debugger;
-    var user = firebase.auth().currentUser;
-    email = user.email;
-
-    var db = firebase.firestore();
-    userRef = db.collection('users').doc(email);
-    await userRef.get()
-    .then((doc) => {
-        dataPassIn = {
-            email: email,
-            displayName: doc.data().displayName,
-            avatar: doc.data().avatar,
-            // friends: doc.data().friends,
-            events: doc.data().events
-        }
-    }).catch((err) => {console.error("Error getting documents: ", err)})
-    
-    var user_class = new User(dataPassIn.email, dataPassIn.displayName, dataPassIn.avatar, /*dataPassIn.friends,*/ dataPassIn.events);
-    //debugger;
-    return user_class;
-}
-
-// This function populates and creates a Hangout object from firebase data
-// Currently, eventRef is a string.
-async function hangoutClass(eventRef) {
-
-    var db = firebase.firestore();
-
-    eventRef = db.collection("hangouts").doc(eventRef);
-    await eventRef.get()
-    .then((doc) => {
-        dataEventPassIn = {
-            // date: doc.data().date,
-            // emails: doc.data().emails,
-            hangoutName: doc.data().hangoutName,
-            location: doc.data().location,
-            attendees: doc.data().attendees
-        }
-    }).catch((err) => {console.error("Error getting documents: ", err)})
-
-    var completeArray = [];
-
-    eventRef = eventRef.collection("userInputs");
-    await eventRef.get()
-    .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {            
-            // doc.data() is never undefined for query doc snapshots
-            dataTimePassIn = {
-                startDates : doc.data().startDates,
-                endDates : doc.data().endDates
-            }
-            let personArray = [];
-            for (i = 0; i < dataTimePassIn.startDates.length; i++) {
-                let avail = new Availability(dataTimePassIn.startDates[i], dataTimePassIn.endDates[i])
-                personArray.push(avail);
-            }
-            completeArray.push(personArray);
-            // console.log(doc.id, " => ", doc.data());
-        });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
-
-    var hangout_class = await new Hangout(dataEventPassIn.hangoutName, dataEventPassIn.attendees, dataEventPassIn.location, completeArray);
-    return hangout_class;
-}
-
 function initialize() {
     firebase.initializeApp(firebaseConfig);
 }
@@ -225,6 +87,13 @@ async function addUser(profile) {
     //debugger;
 }
 
+function logout() {
+    firebase.auth().signOut().then(function() {
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
+
 async function addHangout() {
     eventId = await $('#eventKey').val();
     sessionStorage.setItem('docId', eventId);
@@ -293,14 +162,6 @@ async function addHangout() {
     }
 }
 
-function logout() {
-    firebase.auth().signOut().then(function() {
-        //setTimeout(() => {homeRedirect();}, 500);
-    }).catch(function(error) {
-        console.error(error);
-    });
-}
-
 async function getProfileData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
@@ -317,6 +178,7 @@ async function getProfileData() {
         }
     });
 }
+
 async function getCreateEventPageData() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
@@ -479,133 +341,6 @@ async function addEventReference(eventId) {
     userRef.update({
         events: firebase.firestore.FieldValue.arrayUnion(db.doc(eventRef))
     });
-}
-
-class Availability {
-    constructor(startDate, endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    getStartDate() {
-        return this.startDate;
-    }
-
-    getEndDate() {
-        return this.endDate;
-    }
-};
-
-$(function() { // Chrystal's date picker: once apply is pressed, start and end date are appended to a list of availble dates
-  $('input[name="dates"]').daterangepicker({
-        timePicker: true,
-        startDate: moment(),
-        endDate: moment().add(2, 'day'),
-        locale: {
-            format: 'M/DD hh:mm A'
-        }
-    }, 
-    function(start, end, label) {
-        var hangoutID = sessionStorage.getItem('docId');
-        
-        // save current user's email (string)
-        var userEmail;
-        var user = firebase.auth().currentUser;
-        userEmail = user.email;
-        // var userEmail = 'sample@email.com'; (used for testing)
-        //add to database
-        var db = firebase.firestore();
-        docRef = db.collection('hangouts').doc(hangoutID)   //Will need to change from 'test/' when we change the collection
-            .collection('userInputs').doc(userEmail);
-        docRef.get().then(async (doc) => {
-            // if document exists, update
-            if (doc.exists) {
-                db.collection('hangouts').doc(hangoutID)
-                .collection('userInputs').doc(userEmail).update({
-                    startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
-                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A'))
-                })    
-            }
-            // if document doesn't exist, create new document and add fields
-            else {
-                db.collection('hangouts').doc(hangoutID)
-                .collection('userInputs').doc(userEmail).set({
-                    startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
-                    endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
-                    // theyHaveInput: true
-                })
-            }
-        // db.collection('hangouts').doc(docId)
-        // .collection('userInputs').doc(userEmail).get().
-        })  .catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-        //list date
-        var datesDiv = $(".dates_list");
-        $(datesDiv).append('<li' + ' id=test>' +start.format('YYYY-MM-DD hh:mm A')+' to '+end.format('YYYY-MM-DD hh:mm A')+'</li>');
-    });
-});
-
-function findOverlap( availA, availB ) {
-	var overlapStart;
-	var overlapEnd;
-	if ( availA.getStartDate() >= availB.getEndDate() )
-	{
-		return;//No overlap
-
-	}
-	else if ( availB.getStartDate() >= availA.getEndDate() )
-	{
-		return;//No overlap
-	}
-	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() >= availB.getEndDate() )
-	{
-		overlapStart = availB.getStartDate();
-		overlapEnd = availB.getEndDate();
-	}
-	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
-	{
-		overlapStart = availB.getStartDate();
-		overlapEnd = availA.getEndDate();
-	}
-	else if ( availA.getStartDate() >= availB.getStartDate() && availB.getEndDate() <= availA.getEndDate() )
-	{
-		overlapStart = availA.getStartDate();
-		overlapEnd = availB.getEndDate();
-	}
-	else if ( availA.getStartDate() >= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
-	{
-		overlapStart = availA.getStartDate();
-		overlapEnd = availA.getEndDate();
-    }
-
-    return new Availability(overlapStart, overlapEnd);
-}
-
-function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
-{
-    var i, j;//For loop interators
-    var commonTimes = new Array;//Array of common times
-    for ( i = 0; i < arrOfAvailA.length; i++)
-    {
-        for ( j = 0; j < arrOfAvailB.length; j++ )
-        {
-            var overlapRange = findOverlap(arrOfAvailA[i], arrOfAvailB[j]);
-            if ( typeof overlapRange === 'object')
-            {
-                commonTimes.push(overlapRange);
-            }
-        }
-    }
-    return commonTimes;
-}
-
-function reduceAvailability(arrOfAllFriendsAvail)
-{
-    // var arr = await arrOfAllFriendsAvail.reduce(compareFriendsAvailability, Promise.resolve(arrOfAllFriendsAvail[0]));
-    var arr = arrOfAllFriendsAvail.reduce(compareFriendsAvailability);
-    // console.log('reduceAvailability Return:',arr);
-    return arr;
 }
 
 // $(document).ready(function() {
