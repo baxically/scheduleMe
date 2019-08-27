@@ -417,5 +417,49 @@ async function displayHangoutDetails(hangoutId) {
     for(i; i < people.length; i++) {
         $('#attendees').append('<li>' + people[i] + '</li><br>');
     }
+    $('#hangoutDeleteBtn').append("<button type=\"button\" onclick=\"deleteHangoutDoc('" + hangoutId + "');\">Cancel Attendance</button>");
 }
 // When the user clicks on <span> (x), close the modal
+async function deleteHangoutDoc(hangoutId)
+{
+    console.log('deleteHangoutDoc function called ' + hangoutId);
+    var db = firebase.firestore();
+    var hangoutRef = db.collection('hangouts').doc(hangoutId);
+    var user = firebase.auth().currentUser;
+    var email = user.email;
+    var userInputRef = hangoutRef.collection('userInputs').doc(email);
+    var userRef = db.collection('users').doc(email);
+
+    userInputRef.delete();
+    console.log('input deleted');
+    await hangoutRef.get().then((doc) => {
+        var attendeeArray = doc.data().attendees;
+        if(attendeeArray.length === 1) {
+            console.log('attendees length is 1');
+            hangoutRef.delete();
+        }
+        else {
+            // console.log('else called');
+            // var removeMe = '/users/' + email;
+            // hangoutRef.update({
+            //     attendees: firebase.firestore.FieldValue.arrayRemove(removeMe)
+            // })
+            var i = 0; 
+            for(i; i < attendeeArray.length; i++) {
+                var tempEmail;
+                attendeeArray[i].get().then((doc) => {tempEmail = doc.data().email;})
+                if(tempEmail === email) {
+                    i = attendeeArray.length;
+                    hangoutRef.update({
+                        attendees: firebase.firestore.FieldValue.arrayRemove(attendeeArray[i])
+                    })
+                }
+            }
+        }
+    })
+    
+    console.log('outside of hangoutRef')
+    userRef.update({
+        events: firebase.firestore.FieldValue.arrayRemove(hangoutRef)
+    })
+}
