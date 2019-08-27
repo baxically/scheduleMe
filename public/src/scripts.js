@@ -474,14 +474,20 @@ async function deleteHangoutDoc(hangoutId)
             // })
             var i = 0; 
             for(i; i < attendeeArray.length; i++) {
-                //if(=== email)
+                var tempEmail;
+                attendeeArray[i].get().then((doc) => {tempEmail = doc.data().email;})
+                if(tempEmail === email) {
+                    i = attendeeArray.length;
+                    hangoutRef.update({
+                        attendees: firebase.firestore.FieldValue.arrayRemove(attendeeArray[i])
+                    })
+                }
             }
         }
     })
     
     console.log('outside of hangoutRef')
-    var removeHangout = '/hangouts/' + hangoutId;
     userRef.update({
-        events: firebase.firestore.FieldValue.arrayRemove(removeHangout)
+        events: firebase.firestore.FieldValue.arrayRemove(hangoutRef)
     })
 }
