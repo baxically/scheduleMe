@@ -17,12 +17,9 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
   $('input[name="dates"]').daterangepicker({
         autoUpdateInput: false,
         timePicker: true,
-        //startDate: moment().subtract(1, 'day'),
-        //endDate: moment().subtract(1, 'day'),
         minDate: moment(),
         locale: {
             format: 'M/DD hh:mm A'
-            //cancelLabel: 'Clear'
         }
     }, 
     function(start, end, label) {
@@ -32,10 +29,9 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
         var userEmail;
         var user = firebase.auth().currentUser;
         userEmail = user.email;
-        // var userEmail = 'sample@email.com'; (used for testing)
         //add to database
         var db = firebase.firestore();
-        docRef = db.collection('hangouts').doc(hangoutID)   //Will need to change from 'test/' when we change the collection
+        docRef = db.collection('hangouts').doc(hangoutID)
             .collection('userInputs').doc(userEmail);
         docRef.get().then(async (doc) => {
             // if document exists, update
@@ -52,11 +48,8 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
                 .collection('userInputs').doc(userEmail).set({
                     startDates: firebase.firestore.FieldValue.arrayUnion(start.format('M/DD hh:mm A')),
                     endDates: firebase.firestore.FieldValue.arrayUnion(end.format('M/DD hh:mm A')),
-                    // theyHaveInput: true
                 })
             }
-        // db.collection('hangouts').doc(docId)
-        // .collection('userInputs').doc(userEmail).get().
         })  .catch(function(error) {
             console.log("Error getting document:", error);
         });
@@ -66,6 +59,11 @@ $(function() { // Chrystal's date picker: once apply is pressed, start and end d
     });
 });
 
+/*
+    Param: Two Availability objects
+    Compares both Availability objects to look for any existing overlaps
+    Return: Nothing or new Availability object of overlapping time
+*/
 function findOverlap( availA, availB ) {
 	var overlapStart;
 	var overlapEnd;
@@ -80,16 +78,19 @@ function findOverlap( availA, availB ) {
 	}
 	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() >= availB.getEndDate() )
 	{
+        //AvailB is within AvailA
 		overlapStart = availB.getStartDate();
 		overlapEnd = availB.getEndDate();
 	}
 	else if ( availA.getStartDate() <= availB.getStartDate() && availA.getEndDate() < availB.getEndDate() )
 	{
+        //AvailB starts in AvailA, but AvailB ends after AvailA
 		overlapStart = availB.getStartDate();
 		overlapEnd = availA.getEndDate();
 	}
 	else if ( availA.getStartDate() >= availB.getStartDate() && availB.getEndDate() <= availA.getEndDate() )
 	{
+        //AvailA starts in AvailB, but AvailB ends before Avail 
 		overlapStart = availA.getStartDate();
 		overlapEnd = availB.getEndDate();
 	}
@@ -102,10 +103,18 @@ function findOverlap( availA, availB ) {
     return new Availability(overlapStart, overlapEnd);
 }
 
+/*
+    Param: Two arrays of Availability that need to be compared.
+    compareFriendsAvailability() loops through the first array,
+    and loops through the second array to findOverlap() between
+    the two Availability. If overlap exists, then it is pushed into
+    an array that holds all common Availability.
+    Return: Array of all shared Availability
+*/
 function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
 {
     var i, j;//For loop interators
-    var commonTimes = new Array;//Array of common times
+    var commonTimes = new Array;//Array of Availability
     for ( i = 0; i < arrOfAvailA.length; i++)
     {
         for ( j = 0; j < arrOfAvailB.length; j++ )
@@ -117,13 +126,20 @@ function compareFriendsAvailability( arrOfAvailA, arrOfAvailB )
             }
         }
     }
-    return commonTimes;
+    return commonTimes;//returns array of all Availability
 }
 
+/*
+    Param: Array of Array.
+    The array hold arrays of each person's availability.
+    reduce() accumulator is an array of Availabilities that each person is available for.
+    It is then compared to the next person's Availabilities. If a common time is found then the accumulator
+    will still have the Availability, else it will be taken out. reduce() works so well with compareFriendsAvailability()
+    because the parameter would take in the accumulator and then the next array to be compared.
+    Returns: Array of Availability or Availability object.
+*/
 function reduceAvailability(arrOfAllFriendsAvail)
 {
-    // var arr = await arrOfAllFriendsAvail.reduce(compareFriendsAvailability, Promise.resolve(arrOfAllFriendsAvail[0]));
     var arr = arrOfAllFriendsAvail.reduce(compareFriendsAvailability);
-    // console.log('reduceAvailability Return:',arr);
     return arr;
 }

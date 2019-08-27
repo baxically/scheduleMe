@@ -17,12 +17,12 @@ class Availability {
 function findOverlap( availA, availB ) {
   	var overlapStart;
     var overlapEnd;
-    console.log("Array A");
-    console.log(availA.getStartDate());
-    console.log(availA.getEndDate());
-    console.log("Array B");
-    console.log(availB.getStartDate());
-    console.log(availB.getEndDate());
+    // console.log("Array A");
+    // console.log(availA.getStartDate());
+    // console.log(availA.getEndDate());
+    // console.log("Array B");
+    // console.log(availB.getStartDate());
+    // console.log(availB.getEndDate());
 	if ( availA.getStartDate() >= availB.getEndDate() )
 	{
 		return;//No overlap
