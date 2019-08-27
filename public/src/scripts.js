@@ -444,23 +444,44 @@ async function displayHangoutDetails(hangoutId) {
                 $('#attendees').append('<li>' + person + '</li><br>');
             }
         })
+
+        $('#hangoutDeleteBtn').append("<button type=\"button\" onclick=\"deleteHangoutDoc('" + hangoutId + "');\">Cancel Attendance</button>");
 }
 // When the user clicks on <span> (x), close the modal
-async function deleteHangoutDoc()
+async function deleteHangoutDoc(hangoutId)
 {
+    console.log('deleteHangoutDoc function called ' + hangoutId);
     var db = firebase.firestore();
-    var time = new Date($.now());
-    
-    db.collection("hangouts").where("endDates", "<", time) 
-    .get()
-    .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data()); //Once we get these dates, call .delete()
-        });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+    var hangoutRef = db.collection('hangouts').doc(hangoutId);
+    var user = firebase.auth().currentUser;
+    var email = user.email;
+    var userInputRef = hangoutRef.collection('userInputs').doc(email);
+    var userRef = db.collection('users').doc(email);
 
+    userInputRef.delete();
+    console.log('input deleted');
+    await hangoutRef.get().then((doc) => {
+        var attendeeArray = doc.data().attendees;
+        if(attendeeArray.length === 1) {
+            console.log('attendees length is 1');
+            hangoutRef.delete();
+        }
+        else {
+            // console.log('else called');
+            // var removeMe = '/users/' + email;
+            // hangoutRef.update({
+            //     attendees: firebase.firestore.FieldValue.arrayRemove(removeMe)
+            // })
+            var i = 0; 
+            for(i; i < attendeeArray.length; i++) {
+                //if(=== email)
+            }
+        }
+    })
+    
+    console.log('outside of hangoutRef')
+    var removeHangout = '/hangouts/' + hangoutId;
+    userRef.update({
+        events: firebase.firestore.FieldValue.arrayRemove(removeHangout)
+    })
 }
