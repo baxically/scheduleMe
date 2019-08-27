@@ -388,42 +388,34 @@ function displayBlogPosts() {
 }
 
 async function displayHangoutDetails(hangoutId) {
-    var newHangout = await hangoutClass(hangoutId);
-    var matchingDates = await reduceAvailability(newHangout.getHangoutAvailabilities());
+    var displayHangout = await hangoutClass(hangoutId);
+    var matchingDates = await reduceAvailability(displayHangout.getHangoutAvailabilities());
     eventModal.style.display = "block";
-    var db = firebase.firestore();
-    hangoutRef = db.collection('hangouts').doc(hangoutId);
-    hangoutRef.get()
-        .then(async (doc) => {
-            $('#hangoutName').append(doc.data().hangoutName + ' Details');
-            $('#hangoutKey').append('This is your hangout key: ' + hangoutId);
-            $('#location').append('Location: ' + doc.data().location);
-            if (matchingDates.length > 0) {
-                $('#date').append('Dates: ');
-                for (var i = 0; i < matchingDates.length; i++) {
-                    var avail = matchingDates[i];
-                    var startDate = avail.getStartDate();
-                    var endDate = avail.getEndDate();
-                    if (typeof startDate === 'object') {
-                        $('#date').append('<li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
-                    }
-                    else {
-                        $('#date').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
-                    }
-                }
+
+    $('#hangoutName').append(displayHangout.getHangoutName() + ' Details');
+    $('#hangoutKey').append('This is your hangout key: ' + hangoutId);
+    $('#location').append('Location: ' + displayHangout.getHangoutLocation());
+    if (matchingDates.length > 0) {
+        $('#date').append('Dates: ');
+        for (var i = 0; i < matchingDates.length; i++) {
+            var avail = matchingDates[i];
+            var startDate = avail.getStartDate();
+            var endDate = avail.getEndDate();
+            if (typeof startDate === 'object') {
+                $('#date').append('<li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
             }
             else {
-                $('#date').append("No matching dates found");
+                $('#date').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
             }
-            var people = await doc.data().attendees;
-            var i = 0;
-            for(i; i < people.length; i++) {
-                var person = await people[i].get()
-                    .then((doc) => {
-                        return doc.data().displayName;
-                    })
-                $('#attendees').append('<li>' + person + '</li><br>');
-            }
-        })
+        }
+    }
+    else {
+        $('#date').append("No matching dates found");
+    }
+    var people = displayHangout.getHangoutAttendees();
+    var i = 0;
+    for(i; i < people.length; i++) {
+        $('#attendees').append('<li>' + people[i] + '</li><br>');
+    }
 }
 // When the user clicks on <span> (x), close the modal
