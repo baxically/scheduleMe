@@ -1,9 +1,10 @@
 class Hangout {
-    constructor(hangout, attendees, location, compiledAvailabilities) {
+    constructor(hangout, attendees, location, compiledAvailabilities, eventKey) {
         this.hangout = hangout;
         this.attendees = attendees;
         this.location = location;
         this.compiledAvailabilities = compiledAvailabilities;
+        this.eventKey = eventKey;
     }
 
     getHangoutTitle() {
@@ -22,6 +23,10 @@ class Hangout {
         return this.compiledAvailabilities;
     }
 
+    getEventKey() {
+        return this.eventKey;
+    }
+
 };
 
 // This function populates and creates a Hangout object from firebase data
@@ -29,12 +34,13 @@ class Hangout {
 async function hangoutClass(eventRef) {
 
     var db = firebase.firestore();
-
+    var hangoutKey = eventRef;
     eventRef = db.collection("hangouts").doc(eventRef);
     await eventRef.get()
     .then((doc) => {
         dataEventPassIn = {
             hangoutName: doc.data().hangoutName,
+            hangoutKey: hangoutKey,
             location: doc.data().location,
             attendees: doc.data().attendees
         }

@@ -107,11 +107,9 @@ async function addHangout() {
         .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
                 let currUser = await userClass();
-                // console.log("Big Check");
                 let eventCheck = await currUser.getUserEvents();
                 let i;
                 let eventFound = false;
-                // console.log(eventCheck);
                 if (eventCheck != null) {
                     for (i of eventCheck) {
                         if (i.id === eventId) {
@@ -158,7 +156,6 @@ async function addHangout() {
                     alert("Event Key not found");
                 }
             });
-        //}   
     }
 }
 
@@ -216,14 +213,6 @@ async function getBlogPageData() {
     });
 }
 
-//I don't think we're using this popup prompt anymore so we should consider taking it out 
-function openPrompt() {
-    var event = prompt("Please enter the name of your event", "");
-    if (event != null) {
-        $("#demo").html("When are you free to host '" + event + "'?");
-    }
-}
-
 // async function listFriends(user) {
 //     var staticFriends = await user.getUserFriends();
     
@@ -247,13 +236,8 @@ function openPrompt() {
 //     }
 // }
 
-
-//This function doesn't work anymore??
 async function listEvents(user) {
     var staticEvents = await user.getUserEvents();
-    
-    //var events = "";
-    
     if(staticEvents != null)
     {
         for(var i = 0; i < staticEvents.length; i++)
@@ -263,7 +247,8 @@ async function listEvents(user) {
                 hangoutId = doc.id;
                 return doc.data().hangoutName;
             });
-            $("#eList").append("<li>" + eventName + "              <button type=\"popup\" onclick=\"displayHangoutDetails('" + hangoutId + "');\">Show Details</button></li> <br>");
+            $("#eList").append("<li>" + eventName 
+            + "              <button type=\"popup\" onclick=\"displayHangoutDetails('" + hangoutId + "');\">Show Details</button></li> <br>");
         }
     }
     else
@@ -411,17 +396,14 @@ async function displayHangoutDetails(hangoutId) {
     hangoutRef.get()
         .then(async (doc) => {
             $('#hangoutName').append(doc.data().hangoutName + ' Details');
+            $('#hangoutKey').append('This is your hangout key: ' + hangoutId);
             $('#location').append('Location: ' + doc.data().location);
-            console.log(matchingDates.length)
             if (matchingDates.length > 0) {
                 $('#date').append('Dates: ');
                 for (var i = 0; i < matchingDates.length; i++) {
                     var avail = matchingDates[i];
-                    // console.log(matchingDates[i]);
                     var startDate = avail.getStartDate();
                     var endDate = avail.getEndDate();
-                    // console.log(startDate);
-                    // console.log(typeof startDate);
                     if (typeof startDate === 'object') {
                         $('#date').append('<li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
                     }
@@ -434,7 +416,6 @@ async function displayHangoutDetails(hangoutId) {
                 $('#date').append("No matching dates found");
             }
             var people = await doc.data().attendees;
-            console.log(people);
             var i = 0;
             for(i; i < people.length; i++) {
                 var person = await people[i].get()
