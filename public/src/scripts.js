@@ -396,6 +396,7 @@ async function displayHangoutDetails(hangoutId) {
     hangoutRef.get()
         .then(async (doc) => {
             $('#hangoutName').append(doc.data().hangoutName + ' Details');
+            $('#hangoutKey').append('This is your hangout key: ' + hangoutId);
             $('#location').append('Location: ' + doc.data().location);
             if (matchingDates.length > 0) {
                 $('#date').append('Dates: ');
