@@ -462,4 +462,6 @@ async function deleteHangoutDoc(hangoutId)
     userRef.update({
         events: firebase.firestore.FieldValue.arrayRemove(hangoutRef)
     })
+
+    setTimeout(() => {location.reload();}, 200);
 }
