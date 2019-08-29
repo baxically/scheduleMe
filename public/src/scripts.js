@@ -107,11 +107,9 @@ async function addHangout() {
         .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
                 let currUser = await userClass();
-                // console.log("Big Check");
                 let eventCheck = await currUser.getUserEvents();
                 let i;
                 let eventFound = false;
-                // console.log(eventCheck);
                 if (eventCheck != null) {
                     for (i of eventCheck) {
                         if (i.id === eventId) {
@@ -158,7 +156,6 @@ async function addHangout() {
                     alert("Event Key not found");
                 }
             });
-        //}   
     }
 }
 
@@ -216,14 +213,6 @@ async function getBlogPageData() {
     });
 }
 
-//I don't think we're using this popup prompt anymore so we should consider taking it out 
-function openPrompt() {
-    var event = prompt("Please enter the name of your event", "");
-    if (event != null) {
-        $("#demo").html("When are you free to host '" + event + "'?");
-    }
-}
-
 // async function listFriends(user) {
 //     var staticFriends = await user.getUserFriends();
     
@@ -247,13 +236,8 @@ function openPrompt() {
 //     }
 // }
 
-
-//This function doesn't work anymore??
 async function listEvents(user) {
     var staticEvents = await user.getUserEvents();
-    
-    //var events = "";
-    
     if(staticEvents != null)
     {
         for(var i = 0; i < staticEvents.length; i++)
@@ -263,7 +247,8 @@ async function listEvents(user) {
                 hangoutId = doc.id;
                 return doc.data().hangoutName;
             });
-            $("#eList").append("<li>" + eventName + "              <button type=\"popup\" onclick=\"displayHangoutDetails('" + hangoutId + "');\">Show Details</button></li> <br>");
+            $("#eList").append("<li>" + eventName 
+            + "              <button type=\"popup\" onclick=\"displayHangoutDetails('" + hangoutId + "');\">Show Details</button></li> <br>");
         }
     }
     else
@@ -403,46 +388,80 @@ function displayBlogPosts() {
 }
 
 async function displayHangoutDetails(hangoutId) {
-    var newHangout = await hangoutClass(hangoutId);
-    var matchingDates = await reduceAvailability(newHangout.getHangoutAvailabilities());
+    var displayHangout = await hangoutClass(hangoutId);
+    var matchingDates = await reduceAvailability(displayHangout.getHangoutAvailabilities());
     eventModal.style.display = "block";
-    var db = firebase.firestore();
-    hangoutRef = db.collection('hangouts').doc(hangoutId);
-    hangoutRef.get()
-        .then(async (doc) => {
-            $('#hangoutName').append(doc.data().hangoutName + ' Details');
-            $('#location').append('Location: ' + doc.data().location);
-            console.log(matchingDates.length)
-            if (matchingDates.length > 0) {
-                $('#date').append('Dates: ');
-                for (var i = 0; i < matchingDates.length; i++) {
-                    var avail = matchingDates[i];
-                    // console.log(matchingDates[i]);
-                    var startDate = avail.getStartDate();
-                    var endDate = avail.getEndDate();
-                    // console.log(startDate);
-                    // console.log(typeof startDate);
-                    if (typeof startDate === 'object') {
-                        $('#date').append('<li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
-                    }
-                    else {
-                        $('#date').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
-                    }
-                }
+
+    $('#hangoutName').append(displayHangout.getHangoutName() + ' Details');
+    $('#hangoutKey').append('This is your hangout key: ' + hangoutId);
+    $('#location').append('Location: ' + displayHangout.getHangoutLocation());
+    if (matchingDates.length > 0) {
+        $('#date').append('Dates: ');
+        for (var i = 0; i < matchingDates.length; i++) {
+            var avail = matchingDates[i];
+            var startDate = avail.getStartDate();
+            var endDate = avail.getEndDate();
+            if (typeof startDate === 'object') {
+                $('#date').append('<li>' + 'From ' + startDate.getStartDate() + ' to ' + endDate.getEndDate() + '</li><br>');
             }
             else {
-                $('#date').append("No matching dates found");
+                $('#date').append('<li>' + 'From ' + startDate + ' to ' + endDate + '</li><br>');
             }
-            var people = await doc.data().attendees;
-            console.log(people);
-            var i = 0;
-            for(i; i < people.length; i++) {
-                var person = await people[i].get()
-                    .then((doc) => {
-                        return doc.data().displayName;
-                    })
-                $('#attendees').append('<li>' + person + '</li><br>');
-            }
-        })
+        }
+    }
+    else {
+        $('#date').append("No matching dates found");
+    }
+    var people = displayHangout.getHangoutAttendees();
+    var i = 0;
+    for(i; i < people.length; i++) {
+        $('#attendees').append('<li>' + people[i] + '</li><br>');
+    }
+    $('#hangoutDeleteBtn').append("<button type=\"button\" onclick=\"deleteHangoutDoc('" + hangoutId + "');\">Cancel Attendance</button>");
 }
 // When the user clicks on <span> (x), close the modal
+async function deleteHangoutDoc(hangoutId)
+{
+    console.log('deleteHangoutDoc function called ' + hangoutId);
+    var db = firebase.firestore();
+    var hangoutRef = db.collection('hangouts').doc(hangoutId);
+    var user = firebase.auth().currentUser;
+    var email = user.email;
+    var userInputRef = hangoutRef.collection('userInputs').doc(email);
+    var userRef = db.collection('users').doc(email);
+
+    userInputRef.delete();
+    console.log('input deleted');
+    await hangoutRef.get().then((doc) => {
+        var attendeeArray = doc.data().attendees;
+        if(attendeeArray.length === 1) {
+            console.log('attendees length is 1');
+            hangoutRef.delete();
+        }
+        else {
+            // console.log('else called');
+            // var removeMe = '/users/' + email;
+            // hangoutRef.update({
+            //     attendees: firebase.firestore.FieldValue.arrayRemove(removeMe)
+            // })
+            var i = 0; 
+            for(i; i < attendeeArray.length; i++) {
+                var tempEmail;
+                attendeeArray[i].get().then((doc) => {tempEmail = doc.data().email;})
+                if(tempEmail === email) {
+                    i = attendeeArray.length;
+                    hangoutRef.update({
+                        attendees: firebase.firestore.FieldValue.arrayRemove(attendeeArray[i])
+                    })
+                }
+            }
+        }
+    })
+    
+    console.log('outside of hangoutRef')
+    userRef.update({
+        events: firebase.firestore.FieldValue.arrayRemove(hangoutRef)
+    })
+
+    setTimeout(() => {location.reload();}, 200);
+}

@@ -103,10 +103,13 @@
             <div class="modal-content">
             <span class="close">&times;</span>
             <h1 id="hangoutName"></h1>
+            <p id="hangoutKey"></p>
             <p id="location"></p>
             <p id="date"></p>
             <p>Attendees: </p>
             <p id="attendees"></p>
+            <br>
+            <p id="hangoutDeleteBtn"></p>
             </div>
     
         </div>
@@ -121,14 +124,26 @@
             // When the user clicks on <span> (x), close the modal
             span.onclick = function() {
                 eventModal.style.display = "none";
-                location.reload();
+                $('#hangoutName').empty();
+                $('#hangoutKey').empty();
+                $('#location').empty();
+                $('#date').empty();
+                $('#attendees').empty();
+                $('#hangoutDeleteBtn').empty();
+                // location.reload();
             }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
                 if (event.target == eventModal) {
                     eventModal.style.display = "none";
-                    location.reload();
+                    $('#hangoutName').empty();
+                    $('#hangoutKey').empty();
+                    $('#location').empty();
+                    $('#date').empty();
+                    $('#attendees').empty();
+                    $('#hangoutDeleteBtn').empty();
+                    // location.reload();
                 }
             }
         </script>
