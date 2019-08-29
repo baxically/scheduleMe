@@ -282,9 +282,14 @@ async function listEvents(user) {
 // }
 
 async function addEvent() {
-    await createEvent();
-    await addEventReference(sessionStorage.getItem('docId'));
-    inputTimeRedirect();
+    if (document.getElementById("event_name").value == "" || document.getElementById("location_name").value == "") {
+        alert("Hangout not created. Please fill out both the event name and location.")
+    }
+    else {
+        await createEvent();
+        await addEventReference(sessionStorage.getItem('docId'));
+        inputTimeRedirect();
+    }
 }
 
 async function createEvent() {
