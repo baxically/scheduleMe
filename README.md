@@ -1,6 +1,6 @@
 
 # scheduleMe
-A web application made to help friends find the best time to meet.
+A web application made to help friends find the best time to meet
 
 ## Description
 scheduleMe started as an idea and was brought to life during the 2019 Startup Bootcamp: An International Perspective in London, England, United Kingdom. It is a web application that was built using HTML/CSS, JavaScript, and Google Firebase with the goal of automating finding times for users to meet with their friends. Users simply need to login with their Google account, create a hangout, select their available times, invite friends, and scheduleMe does the rest! Finding time has truly been made easy.
